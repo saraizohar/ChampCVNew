@@ -50,7 +50,7 @@ if($_SERVER["REQUEST_METHOD"] === 'POST'){
 				break;
 			}
 
-            $result = array('points'=>$result[points]);
+            $result = array('points'=>$result["points"]);
 
             if($isBuyContactDetails){
                 // decrease points from the recruiter bank and return contact details and new points

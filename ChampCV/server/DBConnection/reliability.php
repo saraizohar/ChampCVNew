@@ -686,7 +686,7 @@ class Reliability
             if ($report_num == 1) {
                 if ($rank_num == 3 or $rank_num == 4) {
                     $num_wrong_report += 0.5;
-                } else if (rank_num > 4) {
+                } else if ($rank_num > 4) {
                     $num_wrong_report += 1;
                 }
             }
