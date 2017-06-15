@@ -592,8 +592,23 @@ class getDataFromDB{
 		
 		global $db; 
 		
+		$result = getDataFromDB::getUserOpenQuestion($user_id);
+		
+		//check for an error
+		if (key($result) == 'error_message'){
+			return $result; 
+		}
+		else if ($result == false){
+			return array('isHaveQuestion' => false, 'question' => '', 'list'=>array());
+		}
+		else{
+			$open_question = $result['open_question'];
+		}
+		
+		//get answers for open question
+		
 		//set query
-		$query_text = "SELECT open_question, answer_open_question, ranking_person_id
+		$query_text = "SELECT answer_open_question, ranking_person_id
 		FROM rankings, cvs WHERE user_id = ranked_person_id and user_id = :user_id";
 		
 		try {
@@ -604,15 +619,8 @@ class getDataFromDB{
 			//execute query
 			$query_statement->execute();
 			$num_rows = $query_statement->rowCount();
-			
+			//fetch results
 			$current = $query_statement->fetch(PDO::FETCH_ASSOC);
-			
-			//check if the user wrote an open question
-			if ($current['open_question'] == null){
-				$questionArray = array(); 
-				$toReturn = array('isHaveQuestion' => false, 'question' => '', 'list'=>array());
-				return $toReturn; 
-			}
 			
 			$index = 0; 
 			
@@ -636,15 +644,13 @@ class getDataFromDB{
 			
 			//no answers to display
 			if ($index == 0){
-				$questionArray = array();
-				$toReturn = array('isHaveQuestion' => true, 'question' => $current['open_question'], 'list'=>array());
-				return $toReturn; 
+				return array('isHaveQuestion' => true, 'question' => $open_question,
+				'list' => array());
 			}
-						
-			$toReturn = array('isHaveQuestion' => true, 'question' => $current['open_question'],
-			'list' => $temp);
-			
-			return $toReturn; 
+			else{
+				return array('isHaveQuestion' => true, 'question' => $open_question,
+				'list' => $temp);
+			}
 		}
 		
 		catch (PDOException $ex) {
@@ -652,6 +658,37 @@ class getDataFromDB{
 			$result = array('error_message' => $error_message);
 			return $result;
 		}
+	}
+	
+	/*Parameters: $user_id. 
+	  Description: function gets the user's open question from the DB.  
+	  Return: an array containing the user's open question. In case of an error,
+	  an array containing a description of the error*/
+	public static function getUserOpenQuestion($user_id){
+		
+		global $db; 
+		
+		//set query
+		$query_text = "SELECT open_question FROM cvs WHERE user_id = :user_id";
+		
+		try {
+			//prepare query		
+			$query_statement = $db->prepare($query_text);
+			//bind
+			$query_statement->bindValue(':user_id', $user_id); 
+			//execute query
+			$query_statement->execute();
+			//fetch results
+			$result = $query_statement->fetch(PDO::FETCH_ASSOC);
+		}
+		
+		catch (PDOException $ex) {
+			$error_message = $ex->getMessage();
+			$result = array('error_message' => $error_message);
+			return $result;
+		}
+		
+		return $result; 
 	}
 	
 	/*Parameters: $user_id. 
@@ -741,6 +778,5 @@ class getDataFromDB{
     }
 	
 }
-
 
 ?>
