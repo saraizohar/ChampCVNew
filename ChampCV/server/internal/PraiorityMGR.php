@@ -42,7 +42,7 @@ class PraiorityMGR
                 $buyerID = $buyerTask["userID"];
 
                 if (PraiorityMGR::shouldBuy($userIdToPoints[$buyerID] - $bill[$buyerID], $buyerTask["totalGrade"], $toalTasks - $index, $price, $numOfPlacesToAdvance) )
-                    PraiorityMGR::executeBuy($avalableTasks, $bill, $index, $index - $numOfPlacesToAdvance, $price );
+                    PraiorityMGR::executeBuy($avalableTasks, $bill, $index, $index - $numOfPlacesToAdvance, $price, $buyerID );
             }
 
         } while (false); //TODO - in case we decide to ask everyone on the list again
@@ -53,7 +53,7 @@ class PraiorityMGR
     /*
      * change $avalableTasks and $bill in place
      */
-    private static function executeBuy(&$avalableTasks, &$bill, $buyerIndex, $newIndex, $price)
+    private static function executeBuy(&$avalableTasks, &$bill, $buyerIndex, $newIndex, $price, $buyerID)
     {
         $byerTask = $avalableTasks[$buyerIndex];
 
@@ -62,13 +62,9 @@ class PraiorityMGR
 
         //insert $byerTask to $avalableTasks in new index and push other elements
         array_splice($avalableTasks, $newIndex, 0, array($byerTask));
-        
-        if (array_key_exists($buyerIndex, $bill))
-            $bill[$buyerIndex] += $price;
-        else
-            $bill[$buyerIndex] = $price;
 
-        //echo "buy <br/>";
+        $bill[$buyerID] += $price;
+
     }
 
     /*

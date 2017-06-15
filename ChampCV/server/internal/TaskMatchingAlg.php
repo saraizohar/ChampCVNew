@@ -45,6 +45,13 @@ class TaskMatchingAlg
         $totalNumOfRanks = TaskMatchingAlg::getTotalRanks($avalableTasks);
         assert($totalNumOfRanks != 0 or count($avalableTasks) == 0);
 
+        if($totalNumOfRanks == 0)
+        {
+            // no ranks
+            $totalNumOfRanks = 1;
+        }
+
+
         foreach ($avalableTasks as &$task) 
         {
             $rankingGrade = 1 - ($task["numOfRanks"] / $totalNumOfRanks);
