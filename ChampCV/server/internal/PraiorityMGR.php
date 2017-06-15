@@ -45,7 +45,7 @@ class PraiorityMGR
                     PraiorityMGR::executeBuy($avalableTasks, $bill, $index, $index - $numOfPlacesToAdvance, $price, $buyerID );
             }
 
-        } while (false); //TODO - in case we decide to ask everyone on the list again
+        } while (false); //in case we decide to ask everyone on the list again
 
         return $bill;
     }

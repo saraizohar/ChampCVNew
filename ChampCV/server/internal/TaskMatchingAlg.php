@@ -73,7 +73,7 @@ class TaskMatchingAlg
                 return $avalableTasks;
         }
 
-        $rankerCat = dataGetter::getCategoriesOfUser($rankerID); //TODO haim test this
+        $rankerCat = dataGetter::getCategoriesOfUser($rankerID);
         if (key($rankerCat) === 'error_message')
             return $avalableTasks;
 
