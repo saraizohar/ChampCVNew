@@ -946,15 +946,15 @@ class Reliability
             else{
                 $r_sum = $q01['r_sum'];
                 $r_ranks_num = $q01['r_ranks_num'];
-                if ($q01['$cv_r_ranks_num']==null){
+                if ($q01['cv_r_ranks_num']==null){
                     $cv_r_ranks_num=0;
                 }else{
-                    $cv_r_ranks_num= $q01['$cv_r_ranks_num'];
+                    $cv_r_ranks_num= $q01['cv_r_ranks_num'];
                 }
-                if ($q01['$cv_r_sum']==null){
+                if ($q01['cv_r_sum']==null){
                     $cv_r_sum=0;
                 }else{
-                    $cv_r_sum= $q01['$cv_r_sum'];
+                    $cv_r_sum= $q01['cv_r_sum'];
                 }
             }
         } catch (PDOException $ex) {
