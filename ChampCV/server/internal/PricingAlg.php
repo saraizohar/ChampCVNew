@@ -59,6 +59,14 @@ class PricingAlg
         $statistic= reliability::get_ranks_results_array($task['id']);
         if (key($statistic) === 'error_message')
             return $statistic;
+        if ($statistic['numOfRankers'] == 0)
+        {
+            foreach ($statistic['gradePerQuestion'] as &$val)
+            {
+                $val['userAvg'] = 2.5;
+                $val['crowdAvg'] = 2.5;
+            }
+        }
         return $statistic['gradePerQuestion'];
     }
 
