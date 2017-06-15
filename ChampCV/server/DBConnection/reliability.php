@@ -711,6 +711,7 @@ class Reliability
     //ToDo Validate[]
     public static function get_ranks_results_array($cv_id)
     {
+        $ret;
         $questions_res_arr=[];
         for ($i = 1; $i <= 8; $i++) {
             $answer_question = "answer_question_" . $i;
@@ -719,10 +720,12 @@ class Reliability
 
         $users_ranks_num=Reliability::get_users_ranks_num($cv_id);
         $recruiters_ranks_num=Reliability::get_recruiters_ranks_num($cv_id);
-        /*if ($users_ranks_num+$recruiters_ranks_num<5){
-            return array("error_message"=>"not enough information");
-        }*/
-        return array('gradePerQuestion'=>$questions_res_arr,'numOfRankers'=>$users_ranks_num,'numOfRecruiters'=>$recruiters_ranks_num);
+        $ret = array('gradePerQuestion'=>$questions_res_arr,'numOfRankers'=>$users_ranks_num,'numOfRecruiters'=>$recruiters_ranks_num, 'isEnoughRanks'=>true);
+        if ($users_ranks_num+$recruiters_ranks_num<5)
+        {
+            $ret['isEnoughRanks'] = false;
+        }
+        return $ret;
     }
     public static function get_users_ranks_num($cv_id)
     {
