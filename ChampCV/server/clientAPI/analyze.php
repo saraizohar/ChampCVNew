@@ -66,6 +66,9 @@ if($_SERVER["REQUEST_METHOD"] === 'POST'){
 			if ($result == null){
 				$result = true;
 			}
+
+            reliability::update_all_rank_reliability($cid);
+            reliability::cal_and_update_user_reliability($cid);
             break;
         case 'reportComment':
             $cid = $_POST["cid"];
@@ -76,6 +79,9 @@ if($_SERVER["REQUEST_METHOD"] === 'POST'){
 			if ($result == null){
                 $result = true;
 			}
+
+            reliability::update_all_rank_reliability($cid);
+            reliability::cal_and_update_user_reliability($cid);
             break;
 
     }

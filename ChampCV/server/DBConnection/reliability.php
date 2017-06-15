@@ -1,14 +1,14 @@
 <?php
 set_time_limit(0);
-require_once('./DBConnection.php');
+require_once('../clientAPI/DBConnection.php');
 
 class Reliability
 {
-    const rankReliabilityLimit = 0.5;
-    const userReliabilityLimit = 0.5;
+    const rankReliabilityLimit = 0.2;
+    const userReliabilityLimit = 0.2;
     const rankTimeLimit = 10;
-    const W1 = 0.2;
-    const W2 = 0.2;
+    const W1 = 0.7; //penalty
+    const W2 = 0.3;// time
 
     public static function calculate_time_penalty($cv_id, $user_id)
     {
@@ -55,27 +55,24 @@ class Reliability
         $rank_time = floatval($user_time['rank_time']);
         $avg = floatval($time_stat['avg']);
         $std = floatval($time_stat['std']);
-        /*echo "<br> ranks_num <br>";
-        echo $ranks_num;
-        echo "<br> rank_time <br>";
-        echo $rank_time;
-        echo "<br> avg <br>";
-        echo $avg;
-        echo "<br> std <br>";
-        echo $std;
-        echo "<br> print <br>";*/
         if ($rank_time < Reliability::rankTimeLimit) {
             return 1;
-        } elseif ($ranks_num > 20) {
+        }
+        elseif ($ranks_num > 20) {
             if ($avg - $rank_time > $std * 3) { //0.26% of values
                 return 1;
-            } elseif ($avg - $rank_time > $std * 2) { // 4.5% of values
+            }
+            elseif ($avg - $rank_time > $std * 2.5) {
                 return 0.5;
             }
-        } else {
-            return 0;
+            elseif ($avg - $rank_time > $std * 2) { // 4.5% of values
+                return 0.25;
+            }
+
         }
-        return 0;
+        else {
+                return 0;
+        }
 
     }
 
@@ -203,14 +200,14 @@ class Reliability
             $query_statement->execute();
             $q01 = $query_statement->fetch(PDO::FETCH_ASSOC);
             if ($q01 == false) {//can be zero results for that question
-                $p0 = 0;
-                $p1 = 0;
-                $p2 = 0;
+                $ranks_num = 0;
+                $avg = 0;
+                $std = 0;
             }
             else{
-                $p0 = $q01['ranks_num'];
-                $p1 = $q01['avg'];
-                $p2 = $q01['std'];
+                $ranks_num = $q01['ranks_num'];
+                $avg = $q01['avg'];
+                $std = $q01['std'];
             }
         } catch (PDOException $ex) {
             $error_message = $ex->getMessage();
@@ -225,21 +222,33 @@ class Reliability
             $query_statement->execute();
             $q02 = $query_statement->fetch(PDO::FETCH_ASSOC);
             if ($q02 == false) {//can be zero results for that question
-                $p3 = 0;
+                $user_answer = 0;
             }
             else{
-                $p3 = $q02['user_answer'];
+                $user_answer = $q02['user_answer'];
             }
         } catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $user_time = array('error_message' => $error_message);
             return $user_time;
         }
-        if ($p3 >0 and $p0 > 10 and abs($p3 - $p1) > $p2 * 2) {
-            return 1;
-        } else {
-            return 0;
+        //<ToDo> liran addition:
+        if ($user_answer >0 and $ranks_num > 8){
+            if (abs($user_answer - $avg) > $std * 3){
+                return 1;
+            } elseif (abs($user_answer - $avg) > $std * 2){
+                return 0.67;
+            }
         }
+        else{
+                return 0;
+            }
+        //</ToDO>
+        //if ($user_answer >0 and $ranks_num > 10 and abs($user_answer - $avg) > $std * 2) {
+          //  return 1;
+        //} else {
+         //   return 0;
+        //}
     }
 
     public static function mean_ranks_penalty($user_id, $cv_id)
@@ -291,17 +300,14 @@ class Reliability
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
         }
-        //ToDo Validate
         $max = sizeof($q01);
         for ($i = 0; $i < $max; $i++) {
-           // echo "<br> The cv id is: "+$q01[$i]+" <br>";
             $rank_reliability = Reliability::calculate_rank_reliability($user_id, $q01[$i]['cv_id']);
             Reliability::update_rank_reliability($user_id, $q01[$i]['cv_id'], $rank_reliability);
         }
         return 1;
     }
 
-    //ToDo Validate[]
     public static function cal_user_reliability($user_id)
     {
         global $db;
@@ -309,7 +315,7 @@ class Reliability
         $spcv = Reliability::spam_cv_ranks_penalty($user_id);
         $sprp = Reliability::spam_wrong_reports_penalty($user_id);
         $query_text = "
-        SELECT AVG(rank_reliability) AS avg
+        SELECT AVG(rank_reliability) AS avg, count(*) as rank_num
         FROM rankings
         WHERE ranking_person_id= :user_id";
         try {
@@ -322,15 +328,20 @@ class Reliability
             }
             else{
                 $avg = $q01['avg'];
+                $rank_num=$q01['rank_num'];
             }
         } catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
         }
-        If (max($spu, $spcv, $sprp) == 1 or $avg < 0.2) {
+        If (max($spu, $spcv, $sprp) == 1 ) {
             return 0;
-        } else {
+        }
+        else if($avg <= 0.2 and $rank_num>3) {
+            return 0;
+        }
+        else {
             try{
                 $user_reliability = ((float)$avg + (1 - (float)$spu) + (1 - (float)$spcv) + (1 - (float)$sprp)) / 4;
             }catch (RuntimeException $ex) {
@@ -387,8 +398,6 @@ class Reliability
             $query_statement->bindValue(':cv_id', $cv_id);
             $query_statement->bindValue(':rank_reliability', $rank_reliability);
             $query_statement->execute();
-           // $q01 = $query_statement->fetch(PDO::FETCH_ASSOC);
-          //  echo $q01;
         }
         catch (PDOException $ex) {
             $error_message = $ex->getMessage();
@@ -710,6 +719,9 @@ class Reliability
 
         $users_ranks_num=Reliability::get_users_ranks_num($cv_id);
         $recruiters_ranks_num=Reliability::get_recruiters_ranks_num($cv_id);
+        /*if ($users_ranks_num+$recruiters_ranks_num<5){
+            return array("error_message"=>"not enough information");
+        }*/
         return array('gradePerQuestion'=>$questions_res_arr,'numOfRankers'=>$users_ranks_num,'numOfRecruiters'=>$recruiters_ranks_num);
     }
     public static function get_users_ranks_num($cv_id)
@@ -718,7 +730,7 @@ class Reliability
         $query_text = "
             SELECT count(*) AS u_ranks_num
             FROM rankings, users
-            WHERE rank_reliability> :rankReliabilityLimit AND rankings.cv_id= :cv_id AND
+            WHERE rankings.rank_reliability> :rankReliabilityLimit AND rankings.cv_id= :cv_id AND
             rankings. ranking_person_id= users. user_id
              AND users.user_reliability > :userReliabilityLimit";
 
@@ -779,168 +791,171 @@ class Reliability
         switch ($answer_question_i) {
                 case "answer_question_1":
                     $query_text1 = "
-                        SELECT SUM(answer_question_1) AS r_sum, count(*) AS r_ranks_num
+                        SELECT SUM(answer_question_1) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_1 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
                         AND answer_question_1>0 AND rankings. ranking_person_id= recruiters.recruiter_id
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
-                    $query_text2 = "
-                        SELECT SUM(answer_question_1) AS u_sum, count(*) AS u_ranks_num
-                        FROM rankings, users
-                        WHERE rank_reliability> :rankReliabilityLimit AND
+
+
+                    $query_text2 = "SELECT SUM(answer_question_1) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_1 ELSE 0 END) AS cv_u_sum
+                      FROM rankings, users
+                      WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_1>0 AND rankings. ranking_person_id= users. user_id
-                         AND users.user_reliability > :userReliabilityLimit";
-                    $query_text3 = "
-                        SELECT AVG(answer_question_1) AS users_answer
-                        FROM rankings
-                        WHERE cv_id= :cv_id";
+                      AND users.user_reliability >:userReliabilityLimit";
                     break;
                 case "answer_question_2":
                     $query_text1 = "
-                        SELECT SUM(answer_question_2) AS r_sum, count(*) AS r_ranks_num
+                        SELECT SUM(answer_question_2) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_2 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
                         AND answer_question_2>0 AND rankings. ranking_person_id= recruiters.recruiter_id
-                        AND recruiters. recruiter_reliability> :userReliabilityLimit";;
-                    $query_text2 = "
-                        SELECT SUM(answer_question_2) AS u_sum, count(*) AS u_ranks_num
-                        FROM rankings, users
-                        WHERE rank_reliability> :rankReliabilityLimit AND
+                        AND recruiters. recruiter_reliability> :userReliabilityLimit";
+
+
+                    $query_text2 = "SELECT SUM(answer_question_2) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_2 ELSE 0 END) AS cv_u_sum
+                      FROM rankings, users
+                      WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_2>0 AND rankings. ranking_person_id= users. user_id
-                         AND users.user_reliability > :userReliabilityLimit";
-                    $query_text3 = "
-                        SELECT AVG(answer_question_2) AS users_answer
-                        FROM rankings
-                        WHERE cv_id= :cv_id";
+                      AND users.user_reliability >:userReliabilityLimit";
                     break;
                 case "answer_question_3":
                     $query_text1 = "
-                        SELECT SUM(answer_question_3) AS r_sum, count(*) AS r_ranks_num
+                        SELECT SUM(answer_question_3) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_3 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
                         AND answer_question_3>0 AND rankings. ranking_person_id= recruiters.recruiter_id
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
-                    $query_text2 = "
-                        SELECT SUM(answer_question_3) AS u_sum, count(*) AS u_ranks_num
-                        FROM rankings, users
-                        WHERE rank_reliability> :rankReliabilityLimit AND
+
+
+                    $query_text2 = "SELECT SUM(answer_question_3) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_3 ELSE 0 END) AS cv_u_sum
+                      FROM rankings, users
+                      WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_3>0 AND rankings. ranking_person_id= users. user_id
-                         AND users.user_reliability > :userReliabilityLimit";
-                    $query_text3 = "
-                        SELECT AVG(answer_question_3) AS users_answer
-                        FROM rankings
-                        WHERE cv_id= :cv_id";
+                      AND users.user_reliability >:userReliabilityLimit";
                     break;
                   case "answer_question_4":
                       $query_text1 = "
-                        SELECT SUM(answer_question_4) AS r_sum, count(*) AS r_ranks_num
+                        SELECT SUM(answer_question_4) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_4 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
                         AND answer_question_4>0 AND rankings. ranking_person_id= recruiters.recruiter_id
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
-                      $query_text2 = "
-                        SELECT SUM(answer_question_4) AS u_sum, count(*) AS u_ranks_num
-                        FROM rankings, users
-                        WHERE rank_reliability> :rankReliabilityLimit AND
+
+
+                      $query_text2 = "SELECT SUM(answer_question_4) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_4 ELSE 0 END) AS cv_u_sum
+                      FROM rankings, users
+                      WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_4>0 AND rankings. ranking_person_id= users. user_id
-                         AND users.user_reliability > :userReliabilityLimit";
-                      $query_text3 = "
-                        SELECT AVG(answer_question_4) AS users_answer
-                        FROM rankings
-                        WHERE cv_id= :cv_id";
+                      AND users.user_reliability >:userReliabilityLimit";
                     break;
-                            case "answer_question_5":
-                                $query_text1 = "
-                            SELECT SUM(answer_question_5) AS r_sum, count(*) AS r_ranks_num
-                            FROM rankings, recruiters
-                            WHERE rank_reliability> :rankReliabilityLimit
-                            AND answer_question_5>0 AND rankings. ranking_person_id= recruiters.recruiter_id
-                            AND recruiters. recruiter_reliability> :userReliabilityLimit";
-                                $query_text2 = "
-                        SELECT SUM(answer_question_5) AS u_sum, count(*) AS u_ranks_num
-                        FROM rankings, users
-                        WHERE rank_reliability> :rankReliabilityLimit AND
+                case "answer_question_5":
+                    $query_text1 = "
+                        SELECT SUM(answer_question_5) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_5 ELSE 0 END) AS cv_r_sum
+                        FROM rankings, recruiters
+                        WHERE rank_reliability> :rankReliabilityLimit
+                        AND answer_question_5>0 AND rankings. ranking_person_id= recruiters.recruiter_id
+                        AND recruiters. recruiter_reliability> :userReliabilityLimit";
+
+
+                    $query_text2 = "SELECT SUM(answer_question_5) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_5 ELSE 0 END) AS cv_u_sum
+                      FROM rankings, users
+                      WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_5>0 AND rankings. ranking_person_id= users. user_id
-                         AND users.user_reliability > :userReliabilityLimit";
-                                $query_text3 = "
-                        SELECT AVG(answer_question_5) AS users_answer
-                        FROM rankings
-                        WHERE cv_id= :cv_id";
+                      AND users.user_reliability >:userReliabilityLimit";
                         break;
                 case "answer_question_6":
                     $query_text1 = "
-                        SELECT SUM(answer_question_6) AS r_sum, count(*) AS r_ranks_num
+                        SELECT SUM(answer_question_6) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_6 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
                         AND answer_question_6>0 AND rankings. ranking_person_id= recruiters.recruiter_id
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
-                    $query_text2 = "
-                        SELECT SUM(answer_question_6) AS u_sum, count(*) AS u_ranks_num
-                        FROM rankings, users
-                        WHERE rank_reliability> :rankReliabilityLimit AND
+
+
+                    $query_text2 = "SELECT SUM(answer_question_6) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_6 ELSE 0 END) AS cv_u_sum
+                      FROM rankings, users
+                      WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_6>0 AND rankings. ranking_person_id= users. user_id
-                         AND users.user_reliability > :userReliabilityLimit";
-                    $query_text3 = "
-                        SELECT AVG(answer_question_6) AS users_answer
-                        FROM rankings
-                        WHERE cv_id= :cv_id";
+                      AND users.user_reliability >:userReliabilityLimit";
                     break;
                 case "answer_question_7":
                     $query_text1 = "
-                        SELECT SUM(answer_question_7) AS r_sum, count(*) AS r_ranks_num
+                        SELECT SUM(answer_question_7) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_7 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
                         AND answer_question_7>0 AND rankings. ranking_person_id= recruiters.recruiter_id
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
-                    $query_text2 = "
-                        SELECT SUM(answer_question_7) AS u_sum, count(*) AS u_ranks_num
-                        FROM rankings, users
-                        WHERE rank_reliability> :rankReliabilityLimit AND
+
+
+                    $query_text2 = "SELECT SUM(answer_question_7) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_7 ELSE 0 END) AS cv_u_sum
+                      FROM rankings, users
+                      WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_7>0 AND rankings. ranking_person_id= users. user_id
-                         AND users.user_reliability > :userReliabilityLimit";
-                    $query_text3 = "
-                        SELECT AVG(answer_question_7) AS users_answer
-                        FROM rankings
-                        WHERE cv_id= :cv_id";
+                      AND users.user_reliability >:userReliabilityLimit";
                     break;
                   case "answer_question_8":
                       $query_text1 = "
-                        SELECT SUM(answer_question_8) AS r_sum, count(*) AS r_ranks_num
+                        SELECT SUM(answer_question_8) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_8 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
                         AND answer_question_8>0 AND rankings. ranking_person_id= recruiters.recruiter_id
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
-                      $query_text2 = "
-                        SELECT SUM(answer_question_8) AS u_sum, count(*) AS u_ranks_num
-                        FROM rankings, users
-                        WHERE rank_reliability> :rankReliabilityLimit AND
+
+
+                      $query_text2 = "SELECT SUM(answer_question_8) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_8 ELSE 0 END) AS cv_u_sum
+                      FROM rankings, users
+                      WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_8>0 AND rankings. ranking_person_id= users. user_id
-                         AND users.user_reliability > :userReliabilityLimit";
-                      $query_text3 = "
-                        SELECT AVG(answer_question_8) AS users_answer
-                        FROM rankings
-                        WHERE cv_id= :cv_id";
+                      AND users.user_reliability >:userReliabilityLimit";
                     break;
                 default:
                     $query_text1 = "";
                     $query_text2 = "";
-                    $query_text3 = "";
                     }
 
         try {
             $query_statement = $db->prepare($query_text1);
-           // $query_statement->bindValue(':answer_question_i', $answer_question_i); //ToDo fix
             $query_statement->bindValue(':rankReliabilityLimit', Reliability::rankReliabilityLimit);
             $query_statement->bindValue(':userReliabilityLimit', Reliability::userReliabilityLimit);
-            $query_statement->execute();  //ToDo error
+            $query_statement->bindValue(':cv_id', $cv_id);
+            $query_statement->execute();
             $q01 = $query_statement->fetch(PDO::FETCH_ASSOC);
             if ($q01 == false) {
                 $r_sum = 0;
                 $r_ranks_num = 0;
+                $cv_r_ranks_num = 0;
+                $cv_r_sum = 0;
             }
             else{
                 $r_sum = $q01['r_sum'];
                 $r_ranks_num = $q01['r_ranks_num'];
+                if ($q01['$cv_r_ranks_num']==null){
+                    $cv_r_ranks_num=0;
+                }else{
+                    $cv_r_ranks_num= $q01['$cv_r_ranks_num'];
+                }
+                if ($q01['$cv_r_sum']==null){
+                    $cv_r_sum=0;
+                }else{
+                    $cv_r_sum= $q01['$cv_r_sum'];
+                }
             }
         } catch (PDOException $ex) {
             $error_message = $ex->getMessage();
@@ -953,42 +968,29 @@ class Reliability
 
         try {
             $query_statement = $db->prepare($query_text2);
-            //$query_statement->bindValue(':answer_question_i', $answer_question_i); //ToDo fix
             $query_statement->bindValue(':rankReliabilityLimit', Reliability::rankReliabilityLimit);
             $query_statement->bindValue(':userReliabilityLimit', Reliability::userReliabilityLimit);
+            $query_statement->bindValue(':cv_id', $cv_id);
             $query_statement->execute();
             $q02 = $query_statement->fetch(PDO::FETCH_ASSOC);
             if ($q02 == false) {
                 $u_sum =0;
                 $u_ranks_num = 0;
+                $cv_u_ranks_num = 0;
+                $cv_u_sum = 0;
             }
             else{
                 $u_sum = $q02['u_sum'];
                 $u_ranks_num = $q02['u_ranks_num'];
-            }
-        } catch (PDOException $ex) {
-            $error_message = $ex->getMessage();
-            $err = array('error_message' => $error_message);
-            return $err;
-        }
-
-        global $db;
-
-        try {
-            $query_statement = $db->prepare($query_text3);
-           // $query_statement->bindValue(':answer_question_i', $answer_question_i); //ToDo fix
-            $query_statement->bindValue(':cv_id', $cv_id);
-
-            $query_statement->execute();
-            $q03 = $query_statement->fetch(PDO::FETCH_ASSOC);
-            if ($q03 == false) {
-                $users_answer=0;
-            }
-            else{
-                if ($q03['users_answer']==null){
-                    $users_answer=0;
+                if ($q02['cv_u_ranks_num']==null){
+                    $cv_u_ranks_num=0;
                 }else{
-                    $users_answer= $q03['users_answer'];
+                    $cv_u_ranks_num= $q02['cv_u_ranks_num'];
+                }
+                if ($q02['cv_u_sum']==null){
+                    $cv_u_sum=0;
+                }else{
+                    $cv_u_sum= $q02['cv_u_sum'];
                 }
             }
         } catch (PDOException $ex) {
@@ -997,12 +999,24 @@ class Reliability
             return $err;
         }
         $total_rank_num = $u_ranks_num + $r_ranks_num;
+        
+        
+        $total_cv_rank_num = $cv_u_ranks_num + $cv_r_ranks_num;
+
         if ($total_rank_num==0){
             $total_avg_res=0;
         }
         else {
              try {
-                    $total_avg_res = (($r_sum * 2 / 3) + ($u_sum / 3)) / $total_rank_num;
+                 if ($u_ranks_num>0 and $r_ranks_num>0) {
+                     $total_avg_res = (($r_sum * 2 / 3) + ($u_sum / 3)) / $total_rank_num;
+                 }
+                 else if($u_ranks_num>0){
+                     $total_avg_res=$u_sum/ $total_rank_num;
+                 }
+                 else{
+                     $total_avg_res=$r_sum/ $total_rank_num;
+                 }
              }
              catch (PDOException $ex) {
                  $error_message = $ex->getMessage();
@@ -1010,8 +1024,32 @@ class Reliability
                  return $err;
              }
         }
-        return array('userAvg'=>$users_answer, 'crowdAvg'=>$total_avg_res);
+        if ($total_cv_rank_num==0){
+            $total_cv_avg_res=0;
+        }
+        else {
+            try {
+                if ($cv_u_ranks_num>0 and $cv_r_ranks_num>0) {
+                    $total_cv_avg_res = (($cv_r_sum * 2 / 3) + ($cv_u_sum / 3)) / $total_cv_rank_num;
+                }
+                else if($cv_u_ranks_num>0){
+                    $total_cv_avg_res=$cv_u_sum/ $total_cv_rank_num;
+                }
+                else{
+                    $total_cv_avg_res=$cv_r_sum/ $total_cv_rank_num;
+                }
+
+      
+            }
+            catch (PDOException $ex) {
+                $error_message = $ex->getMessage();
+                $err = array('error_message' => $error_message);
+                return $err;
+            }
+        }
+        return array('userAvg'=>$total_cv_avg_res, 'crowdAvg'=>$total_avg_res);
     }
 }
+
 
 ?>

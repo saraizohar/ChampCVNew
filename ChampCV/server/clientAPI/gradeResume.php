@@ -62,8 +62,8 @@ if($_SERVER["REQUEST_METHOD"] === 'POST'){
                 //$result = array('points'=>46, 'contactDetails'=>array('firstName'=>'Sarai', 'lastName'=>'Zohar', 'email'=>'sarai.zohar@gmail.com', 'city'=>'Rishon Le-Zion', 'phoneNumber'=>'0545866635'));
             }
 
-            //reliability::update_all_rank_reliability($cid);
-            //reliability::cal_and_update_user_reliability($cid);
+            reliability::update_all_rank_reliability($cid);
+            reliability::cal_and_update_user_reliability($cid);
 
             break;
         case "report":
@@ -76,6 +76,9 @@ if($_SERVER["REQUEST_METHOD"] === 'POST'){
 			if ($result == null){
 				$result = true;
 			}
+
+            reliability::update_all_rank_reliability($cid);
+            reliability::cal_and_update_user_reliability($cid);
             break;
     }
     echo (json_encode($result));
