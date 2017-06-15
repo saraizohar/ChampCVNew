@@ -1,0 +1,238 @@
+﻿<div class="row form">
+        <div class="row">
+            <div class="col s6 offset-s4">
+                <h5 class="grey-text text-darken-1">Please fill the following fields in order to create an account</h5>
+            </div>
+        </div>
+        <form class="col s12 offset-s4">
+            <div class="row">
+                <div class="row">
+                    <label class="fields-label">
+                        Are you a recruiter?
+                    </label>
+                </div>
+                <div class="row">
+                    <div class="input-field col s1">
+                        <p>
+                            <input name="group3" type="radio" id="yes" ng-model="$ctrl.isRecruiter" value="true"/>
+                            <label for="yes">Yes</label>
+                        </p>
+                    </div>
+                    <div class="input-field col s1">
+                        <p>
+                            <input name="group3" type="radio" id="no" ng-model="$ctrl.isRecruiter" value="false"/>
+                            <label for="no">No</label>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s2">
+                    <input id="first_name" type="text" ng-model="$ctrl.firstName" ng-class="{'invalid': $ctrl.isEmptyFields && !$ctrl.firstName}">
+                    <label for="first_name">First Name</label>
+                </div>
+                <div class="input-field col s2">
+                    <input id="last_name" type="text" ng-model="$ctrl.lastName" ng-class="{'invalid': $ctrl.isEmptyFields && !$ctrl.lastName}">
+                    <label for="last_name">Last Name</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="username" type="text" ng-model="$ctrl.username" ng-class="{'invalid': $ctrl.isEmptyFields && !$ctrl.username}">
+                    <label for="username">Username</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="email" type="email" ng-model="$ctrl.email" ng-class="{'invalid': $ctrl.isEmptyFields && !$ctrl.email}">
+                    <label for="email">Email</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="phone" type="text" ng-model="$ctrl.phoneNumber" ng-class="{'invalid': $ctrl.isEmptyFields && !$ctrl.phoneNumber}">
+                    <label for="phone">Phone Number</label>
+                </div>
+            </div>
+            <div class="row" ng-if="$ctrl.isRecruiter !== 'true'">
+                <div class="input-field col s4">
+                    <input id="phone" type="text" ng-model="$ctrl.city" ng-class="{'invalid': $ctrl.isEmptyFields && !$ctrl.city}">
+                    <label for="phone">City</label>
+                </div>
+            </div>
+            <div class="row" ng-if="$ctrl.isRecruiter === 'true'">
+                <div class="input-field col s4">
+                    <input id="phone" type="text" ng-model="$ctrl.companyName" ng-class="{'invalid': $ctrl.isEmptyFields && !$ctrl.companyName}">
+                    <label for="phone">Company's Name</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="password" type="password" ng-model="$ctrl.password" ng-class="{'invalid': $ctrl.isEmptyFields && !$ctrl.password}">
+                    <label for="password">Password</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="confirmPassword" type="password" ng-model="$ctrl.confirmPassword" ng-class="{'invalid': !$ctrl.passwordMatch || ($ctrl.isEmptyFields && !$ctrl.confirmPassword)}">
+                    <label for="confirmPassword">Confirm Password</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col seperator s4"></div>
+            </div>
+            
+            <div class="row">
+                <div class="col s4">
+                    <label class="fields-label">Which fields are you femilier with?</label>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col s2">
+                    <div ng-repeat="field in $ctrl.fields" ng-if="$index<=3">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    <input type="checkbox" id="{{field.name}}" ng-model="field.model.grade" />
+                                    <label for="{{field.name}}">{{field.name}}</label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s2">
+                    <div ng-repeat="field in $ctrl.fields" ng-if="$index>3">
+                        <div class="row">
+                            <div class="col s12">
+                                <p>
+                                    <input type="checkbox" id="{{field.name}}" ng-model="field.model.grade" />
+                                    <label for="{{field.name}}">{{field.name}}</label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="$ctrl.isRecruiter === 'false'">
+                <div class="row">
+                    <div class="col seperator s4"></div>
+                </div>
+                <div class="row">
+                    <div class="col s4 lower">
+                        <label class="fields-label">Want to improve your CV? Upload it right now and start using the crowd wisdom!</label>
+                        <label class="fields-label">Upload your resume in PDF format. We recommend you to use an anonymous resume, <span style="font-weight:500">which doen't contain your contact details.</span></label>
+                        <label class="fields-label upload-cv-secondary-text">Don't wan't to upload right now? it's OK, you can do it later from the settings menu</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s4">
+                        <div class="file-field input-field">
+                            <div class="btn">
+                                <span>Upload</span>
+                                <!--<input type="file" ng-model-instant onchange="angular.element(this).scope().fileChosenHandler(this)" />-->
+                                <input type="file" custom-on-change="$ctrl.fileChosenHandler" />
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <row ng-if="$ctrl.isFileChosen">
+                    <div class="row">
+                        <div class="col seperator s4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col s4">
+                            <label class="fields-label">Would you like us to send your contact details to recruiters?</label>
+                            <label class="fields-label upload-cv-secondary-text">You can change your decision later from the settings menu</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s4">
+                            <div class="switch">
+                                <label>
+                                    No
+                                    <input type="checkbox" ng-model="$ctrl.isSendDetails" value="false">
+                                    <span class="lever"></span>
+                                    Yes
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col seperator s4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col s4">
+                            <label class="fields-label">Which fields Do your resume contains?</label>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col s2">
+                            <div ng-repeat="field in $ctrl.fields" ng-if="$index<=3">
+                                <div class="row">
+                                    <div class="col s12">
+                                        <p>
+                                            <input type="checkbox" id="{{field.name+'_resume'}}" ng-model="field.model.resume" />
+                                            <label for="{{field.name+'_resume'}}">{{field.name}}</label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s2">
+                            <div ng-repeat="field in $ctrl.fields" ng-if="$index>3">
+                                <div class="row">
+                                    <div class="col s12">
+                                        <p>
+                                            <input type="checkbox" id="{{field.name+'_resume'}}" ng-model="field.model.resume" />
+                                            <label for="{{field.name+'_resume'}}">{{field.name}}</label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="row">
+                        <div class="col seperator s4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col s4">
+                            <label class="fields-label">Let the crowd help you improve you resume by asking it a question</label>
+                            <label class="fields-label upload-cv-secondary-text">You can change your question later from the settings menu</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s4">
+                            <textarea placeholder="Type your question" id="textarea1" class="materialize-textarea" data-length="250" maxlength="250" ng-model="$ctrl.openQuestion"></textarea>
+                            <!--<label ng-class="{active: $ctrl.resume.openQuestion}" for="textarea1">Type youre questions</label>-->
+                        </div>
+                    </div>
+                </row>
+            </div>
+            <div class="row lower">
+                <div class="col s4 offset-s1">
+                    <button class="btn waves-effect waves-light" type="submit" name="action" ng-click="$ctrl.submit()">
+                        Submit
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s4 offset-s1 lower">
+                    <label class="fields-label red-text" ng-if="$ctrl.isError">{{$ctrl.errorText}}</label>
+                </div>
+            </div>
+
+
+        </form>
+    </div>

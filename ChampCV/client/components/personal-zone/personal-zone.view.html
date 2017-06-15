@@ -1,0 +1,54 @@
+﻿<div class="row first" ng-show="!$ctrl.isLoading">
+    <div ng-show="$ctrl.isUploadedResume && !$ctrl.user.isRecruiter && !$ctrl.isError">
+        <div class="col s12 offset-s3">
+            <ul class="tabs">
+                <li class="tab col s2"><a href="#GeneralStats">General Statistics</a></li>
+                <!--<li class="tab col s2"><a href="#grades">Crowd Grades</a></li>-->
+                <li class="tab col s2"><a href="#answers">Crowd Answers</a></li>
+                <li class="tab col s2"><a href="#comments">Crowd Comments</a></li>
+            </ul>
+        </div>
+        <div id="GeneralStats" class="col s12 first">
+            <statistics data-user="$ctrl.user" data-statistics-info="$ctrl.statistic"></statistics>
+        </div>
+        <!--<div id="grades" class="col s12">Test 2</div>-->
+        <div id="answers" class="col s12 first">
+            <answers data-user="$ctrl.user" data-answers-info="$ctrl.answers"></answers>
+        </div>
+        <div id="comments" class="col s12 first">
+            <comments data-user="$ctrl.user" data-comments-info="$ctrl.comments"></comments>
+        </div>
+    </div>
+    <div ng-show="!$ctrl.isUploadedResume && !$ctrl.user.isRecruiter && !$ctrl.isError" class="col s8 offset-s2 first center-align">
+        <h3 class="blue-grey-text darken-4">Too bad, you didn't upload your resume so we don't have statistics for you</h3>
+        <h5 class="blue-grey-text darken-4">Want to improve your resume? Upload it right now from the settings menu</h5>
+    </div>
+    <div ng-show="$ctrl.isError" class="col s8 offset-s2 first center-align">
+        <h3 class="blue-grey-text darken-4">Oops, We encounter a problem.</h3>
+        <h3 class="blue-grey-text darken-4">We are working on fixing it.</h3>
+    </div>
+    <div ng-show="$ctrl.user.isRecruiter && !$ctrl.isError" class="col s8 offset-s2 first center-align">
+        <h3 class="blue-grey-text darken-4">Bank account details</h3>
+        <h5 class="blue-grey-text darken-4">Each resume you're grading increases your points in the bank.</h5>
+        <h5 class="blue-grey-text darken-4">Use this credit to buy potential eployees' contact details</h5>
+        <h5 class="blue-grey-text darken-4 first">Current Credit: <span class="points">{{$ctrl.user.points}}</span></h5>
+        <div class="first points-star">
+            <i class="medium material-icons" ng-if="$ctrl.user.points < 440">star_border</i>
+            <i class="medium material-icons" ng-if="$ctrl.user.points >= 440">star</i>
+            
+
+            <i class="medium material-icons" ng-if="$ctrl.user.points < 880">star_border</i>
+            <i class="medium material-icons" ng-if="$ctrl.user.points >= 880">star</i>
+
+            <i class="medium material-icons" ng-if="$ctrl.user.points < 1320">star_border</i>
+            <i class="medium material-icons" ng-if="$ctrl.user.points >= 1320   ">star</i>
+
+            <i class="medium material-icons" ng-if="$ctrl.user.points < 1760">star_border</i>
+            <i class="medium material-icons" ng-if="$ctrl.user.points >= 1760">star</i>
+
+            <i class="medium material-icons" ng-if="$ctrl.user.points < 2200">star_border</i>
+            <i class="medium material-icons" ng-if="$ctrl.user.points >= 2200">star</i>
+        </div>
+    </div>
+    
+</div>

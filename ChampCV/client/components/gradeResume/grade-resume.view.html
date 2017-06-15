@@ -1,0 +1,131 @@
+﻿<div id="grade-form">
+    <div class="row">
+        <div class="col s5 offset-s2 mobile">
+            <h5 class="resume">The resume owner wants to find a job in the following fields:</h5>
+            <h6 class="resume-fields" ng-repeat="field in $ctrl.fieldsInResume">
+                <i class="material-icons">done</i>
+                {{field}}
+            </h6>
+            <h5 class="resume">Please read the following CV and answer the questions</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s5 offset-s2 mobile">
+            <iframe class="resume-iframe" src="{{$ctrl.resumeUrl}}"
+                     frameborder="0"></iframe>
+            <iframe class="resume-iframe-small" src="{{$ctrl.resumeUrl}}"
+                    frameborder="0"></iframe>
+            <br>
+            <a class="report waves-effect waves-light btn blue-grey lighten-5 blue-grey-text text-darken-4" ng-click="$ctrl.report()"><i class="material-icons left">error</i>Report</a>
+            <br />
+            <a class="report waves-effect waves-light btn blue-grey lighten-5 blue-grey-text text-darken-4" ng-click="$ctrl.skip()"><i class="material-icons left">navigate_next</i>Skip</a>
+        </div>
+        <div class="col s4 right-side">
+            <div class="row" ng-repeat="question in $ctrl.closeQuestions">
+                <p>{{question.text}}</p>
+                <a id="1"class="star waves-effect btn-flat" ng-click="$ctrl.starClicked($event, this)" ng-if="question.grade==0"><i class="material-icons left right">star_border</i></a>
+                <a id="1" class="star waves-effect btn-flat" ng-click="$ctrl.starClicked($event, this)" ng-if="question.grade>0"><i class="material-icons left right">star</i></a>
+
+                <a id="2" class="star waves-effect btn-flat" ng-click="$ctrl.starClicked($event,this)" ng-if="question.grade<2"><i class="material-icons left right">star_border</i></a>
+                <a id="2" class="star waves-effect btn-flat" ng-click="$ctrl.starClicked($event, this)" ng-if="question.grade>=2"><i class="material-icons left right">star</i></a>
+
+                <a id="3" class="star waves-effect btn-flat" ng-click="$ctrl.starClicked($event,this)" ng-if="question.grade<3"><i class="material-icons left right">star_border</i></a>
+                <a id="3" class="star waves-effect btn-flat" ng-click="$ctrl.starClicked($event, this)" ng-if="question.grade>=3"><i class="material-icons left right">star</i></a>
+
+                <a id="4" class="star waves-effect btn-flat" ng-click="$ctrl.starClicked($event,this)" ng-if="question.grade<4"><i class="material-icons left right">star_border</i></a>
+                <a id="4" class="star waves-effect btn-flat" ng-click="$ctrl.starClicked($event, this)" ng-if="question.grade>=4"><i class="material-icons left right">star</i></a>
+
+                <a id="5" class="star waves-effect btn-flat" ng-click="$ctrl.starClicked($event,this)" ng-if="question.grade<5"><i class="material-icons left right">star_border</i></a>
+                <a id="5" class="star waves-effect btn-flat" ng-click="$ctrl.starClicked($event, this)" ng-if="question.grade>=5"><i class="material-icons left right">star</i></a>
+
+                <div ng-if="question.isNotRelevantBtn">
+                    <input type="checkbox" id="{{question.id + 'notRelevant'}}" ng-model="question.isNotRelevant" ng-change="$ctrl.notRelevantClicked(question.id)"/>
+                    <label for="{{question.id + 'notRelevant'}}">Not Relevant</label>
+                </div>
+                
+            </div>
+
+            <div class="row">
+                <form>
+                    <div class="row" ng-if="$ctrl.resume.question && $ctrl.resume.question != ''">
+                        <div class="input-field col s8">
+                            <textarea id="textarea1" class="materialize-textarea" data-length="250" maxlength="250" ng-model="$ctrl.openAnswer"></textarea>
+                            <label for="textarea1">{{$ctrl.resume.question}}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s8">
+                            <textarea id="textarea1" class="materialize-textarea" data-length="250" maxlength="250" ng-model="$ctrl.comments"></textarea>
+                            <label for="textarea1">Do you have any comments?</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="$ctrl.user.isRecruiter && !$ctrl.isShowModal">
+        <div class="col s8 offset-s2" ng-if="$ctrl.user.points >= $ctrl.resume.price">
+            <h5>Would you like to buy this potential employee's contact details for just <span class="price">{{$ctrl.resume.price}}</span> points?</h5>
+            <form>
+                <div class="row lower">
+                    <div class="col s4">
+                        <div class="switch">
+                            <label>
+                                No
+                                <input type="checkbox" ng-model="$ctrl.isBuy" value="false">
+                                <span class="lever"></span>
+                                Yes
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col s8 offset-s2" ng-if="$ctrl.user.points < $ctrl.resume.price">
+            <h5>You have only <span class="price">{{$ctrl.user.points}}</span> points.</h5>
+            <h5>In order to buy this employee's contact details you must have at least <span class="price">{{$ctrl.resume.price}}</span> points</h5>
+            <h5>Grade more resumes in order to increase your credit</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="row">
+            <div class="col l4 offset-l5 lower">
+                <button class="btn waves-effect waves-light" type="submit" name="action" ng-click="$ctrl.submit()">
+                    Submit
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col l4 offset-l5">
+                <label class="fields-label red-text error" ng-if="$ctrl.isError">{{$ctrl.errorText}}</label>
+            </div>
+        </div>
+    </div>
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Your current balance is: {{$ctrl.user.points}}</h4>
+            <br>
+            <h5>Please save the user's contact details:</h5>
+            <br>
+            <div class="contact-details">
+                <span class="title">Full Name:</span> {{$ctrl.contactDetails.firstName}} {{$ctrl.contactDetails.lastName}}
+            </div>
+            <div>
+                <span class="title">email:</span> {{$ctrl.contactDetails.email}}
+            </div>
+            <div>
+                <span class="title">phoneNumber:</span> {{$ctrl.contactDetails.phoneNumber}}
+            </div>
+            <div>
+                <span class="title">city:</span> {{$ctrl.contactDetails.city}}
+            </div>
+                
+            
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">OK</a>
+        </div>
+    </div>
+
+</div>

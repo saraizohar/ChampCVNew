@@ -1,0 +1,24 @@
+﻿<div class="row">
+    <div class="col s12">
+        <div class="row" ng-if="$ctrl.commentsInfo.length == 0">
+            <h3 class="center-align blue-grey-text darken-4">There is No Data to Display</h3>
+            <h5 class="center-align blue-grey-text darken-4">There are no comments to display at this moment. Rank more resumes in order to increase your resume exposure.</h5>
+        </div>
+        <div class="row" ng-show="$ctrl.commentsInfo.length > 0">
+            <div class="row">
+                <h5 class="col s8 offset-s2 first center-align blue-grey-text darken-4">Checkout the crowd's comments, find out what to keep and what to improve</h5>    
+            </div>
+            
+            <div class="row" ng-repeat="comment in $ctrl.commentsInfo" ng-class="{first: $first}">
+                <div class="col s6 offset-s3">
+                    <div class="card-panel teal lighten-5">
+                        <a class="tooltipped report" data-html="true" data-position="bottom" data-delay="100" data-tooltip="REPORT" ng-click="$ctrl.report(comment)"><i class="material-icons">error</i></a>
+                        <div class="blue-grey-text darken-1 answer">
+                            {{comment.text}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+﻿<div>
+    <div class="bkg" ng-if="!$ctrl.isShowLogin">
+        <div class="section no-pad-bot">
+            <div class="container">
+                <br><br>
+                <h1 class="header center teal-text text-darken-2">ChampCV</h1>
+                <div class="row center">
+                    <h5 class="header col s12">Improve Your CV and Find a Job!</h5>
+                </div>
+                <div class="row center">
+                    <a href="#!" class="btn" ng-click="$ctrl.goToLogin()">Login</a>
+                </div>
+                <br><br>
+            </div>
+        </div>
+    </div>
+    <div class="form" id="index-banner" style="opacity:0" ng-show="$ctrl.isShowLogin">
+        <div class="section no-pad-bot">
+            <div class="container">
+                
+                <div class="row">
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col l6 offset-l3">
+                                <input id="first_name" type="text" class="validate" ng-model="$ctrl.username">
+                                <label for="first_name">Username</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col l6 offset-l3">
+                                <input id="password" type="password" class="validate" ng-model="$ctrl.password">
+                                <label for="password">Password</label>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="!$ctrl.isLoading">
+                            <div class="col offset-l5">
+                                <button class="btn waves-effect waves-light" type="submit" name="action" ng-click="$ctrl.submit()" ng-class="{disabled: !$ctrl.username || !$ctrl.password}">
+                                    Login
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="$ctrl.isLoading">
+                            <div class="col s2 preloader">
+                                <div class="preloader-wrapper big small active">
+                                    <div class="spinner-layer spinner-blue-only">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="$ctrl.isError">
+                            <div class="col s12 lower">
+                                <h5 class="center-align red-text fields-label">{{$ctrl.errorText}}</h5>
+                            </div>
+                        </div>
+                        <div class="row center sign-up">
+                            <span>
+                                Still Doesn't have an account?
+                            </span>
+                            <a ng-click="$ctrl.signUpHandler()">Sign Up Now!</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <!--   Icon Section   -->
+            <div class="row">
+                <div class="col s12 m4">
+                    <div class="icon-block">
+                        <h2 class="center brown-text"><i class="material-icons">mode_edit</i></h2>
+                        <h5 class="center title">Improve Your Resume</h5>
+                        <!--<p class="light">We did most of the heavy lifting for you to provide a default stylings that incorporate our custom components. Additionally, we refined animations and transitions to provide a smoother experience for developers.</p>-->
+                        <p class="light">Upload your resume and let others grade it. Use the crowd wisdom in order know better what to improve and what to keep. Each time you contrubute to the croud by grading other's resume, your resume gets higher priority. </p>
+                    </div>
+                </div>
+                <div class="col s12 m4">
+                    <div class="icon-block">
+                        <h2 class="center brown-text"><i class="material-icons">group</i></h2>
+                        <h5 class="center title">Keep Updated With the Market</h5>
+                        <!--<p class="light">By utilizing elements and principles of Material Design, we were able to create a framework that incorporates components and animations that provide more feedback to users. Additionally, a single underlying responsive system across all platforms allow for a more unified user experience.</p>-->
+                        <p class="light">By reading other's resume you know you competitors better and how you can improve.</p>
+                    </div>
+                </div>
+                <div class="col s12 m4">
+                    <div class="icon-block">
+                        <h2 class="center brown-text"><i class="material-icons">work</i></h2>
+                        <h5 class="center title">Find a Job</h5>
+                        <!--<p class="light">We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.</p>-->
+                        <p class="light">Our crowd contains recuiters who are searching for potensial employees. When recruiters grading your resume, they have the abillity to get your contact details (Only if you allow us to do so).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

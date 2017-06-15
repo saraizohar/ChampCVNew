@@ -1,0 +1,196 @@
+﻿<div class="row first" ng-show="!$ctrl.isLoading">
+    <div ng-show="$ctrl.isError" class="col s8 offset-s2 first center-align">
+        <h3 class="blue-grey-text darken-4">Oops, We encounter a problem.</h3>
+        <h3 class="blue-grey-text darken-4">We are working on fixing it.</h3>
+    </div>
+
+    <div ng-show="!$ctrl.isError">
+        <div class="col s12" ng-class="{'offset-s3' : !$ctrl.user.isRecruiter, 'offset-s4': $ctrl.user.isRecruiter}">
+            <ul class="tabs">
+                <li class="tab col s2"><a class="active" href="#contact-details">{{$ctrl.user.isRecruiter ? 'Personal Information' : 'Contact Details'}}</a></li>
+                <li class="tab col s2"><a href="#grading-settings">Grading Settings</a></li>
+                <li class="tab col s2" ng-show="!$ctrl.user.isRecruiter"><a href="#resume-settings">Resume's Settings</a></li>
+            </ul>
+        </div>
+        <div id="contact-details" class="col s6 offset-s3 card-lower">
+            <div class="card-panel teal lighten-5">
+                <h5 class="blue-grey-text darken-1">{{$ctrl.user.isRecruiter ? 'Update your personal information' : 'Update your contact details so recuirters can reach you'}}</h5>
+                <form class="lower">
+                    <div class="row">
+                        <div class="input-field col s8 offset-s2">
+                            <input id="email" type="email" class="validate" ng-model="$ctrl.contactDetails.email">
+                            <label ng-class="{active: $ctrl.contactDetails.email}" for="email">Email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s8 offset-s2">
+                            <input id="phone" type="text" ng-model="$ctrl.contactDetails.phoneNumber">
+                            <label ng-class="{active: $ctrl.contactDetails.phoneNumber}" for="phone">Phone Number</label>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="!$ctrl.user.isRecruiter">
+                        <div class="input-field col s8 offset-s2">
+                            <input id="phone" type="text" ng-model="$ctrl.contactDetails.city">
+                            <label ng-class="{active: $ctrl.contactDetails.city}" for="phone">City</label>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="$ctrl.user.isRecruiter">
+                        <div class="input-field col s8 offset-s2">
+                            <input id="phone" type="text" ng-model="$ctrl.contactDetails.companyName">
+                            <label ng-class="{active: $ctrl.contactDetails.companyName}" for="phone">Company Name</label>
+                        </div>
+                    </div>
+                    <div ng-if="!$ctrl.user.isRecruiter">
+                        <div class="row">
+                            <div class="col s8 offset-s2">
+                                <label class="fields-label">Would you like us to send your contact details to recruiters?</label>
+                                <label ng-if="!$ctrl.resume.isUploadedResume && !$ctrl.isFileChosen" class="fields-label">Upload you resume right now from the 'Resume settings' tab, and FIND A JOB!</label>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="$ctrl.resume.isUploadedResume || $ctrl.isFileChosen">
+                            <div class="col s8 offset-s2">
+                                <div class="switch">
+                                    <label>
+                                        No
+                                        <input type="checkbox" ng-model="$ctrl.resume.isSendContactDetails" value="false">
+                                        <span class="lever"></span>
+                                        Yes
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row lower">
+                        <div class="col s4 offset-s4">
+                            <button class="btn waves-effect waves-light" type="submit" name="action" ng-click="$ctrl.submit('contactDetails')">
+                                Update
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="grading-settings" class="col s6 offset-s3 card-lower">
+            <div class="card-panel teal lighten-5">
+                <h5 class="blue-grey-text darken-1">{{$ctrl.user.isRecruiter ? 'In which fields are you looking to employ?':'Update the fields you are femiliar with and help the crowd'}}</h5>
+                <h6 class="blue-grey-text darken-1">You must choose at least one</h6>
+                <div class="row">
+                    <div class="col s4 offset-s2">
+                        <div class="row" ng-repeat="field in $ctrl.fieldsToGrade" ng-if="$index<=3">
+                            <div class="col">
+                                <p>
+                                    <input type="checkbox" id="{{field.name+'_grade'}}" ng-model="field.model.grade" />
+                                    <label for="{{field.name+'_grade'}}">{{field.name}}</label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="row" ng-repeat="field in $ctrl.fieldsToGrade" ng-if="$index>3">
+                            <div class="col">
+                                <p>
+                                    <input type="checkbox" id="{{field.name+'_grade'}}" ng-model="field.model.grade" />
+                                    <label for="{{field.name+'_grade'}}">{{field.name}}</label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row lower">
+                        <div class="col s4 offset-s4">
+                            <button class="btn waves-effect waves-light" type="submit" name="action" ng-click="$ctrl.submit('gradingSettings')">
+                                Update
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="$ctrl.isError1">
+                        <div class="col s12 lower">
+                            <h5 class="center-align red-text fields-label">{{$ctrl.errorText1}}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="resume-settings" class="col s6 offset-s3 card-lower" ng-if="!$ctrl.user.isRecruiter">
+            <div class="card-panel teal lighten-5">
+                <div class="row" ng-if="$ctrl.resume.isUploadedResume">
+                    <h5 class="blue-grey-text darken-1">This is your current resume</h5>
+                    <div class="col s6 offset-s3">
+                        <canvas style="width:60%" class="materialboxed resume" id="{{'canvas'}}"></canvas>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="removeResume" ng-model="$ctrl.isRemoveResume" />
+                        <label for="removeResume">I want to remove my resume</label>
+                    </div>
+                </div>
+                <div ng-if="!$ctrl.isRemoveResume">
+                    <h5 class="blue-grey-text darken-1">{{$ctrl.resume.isUploadedResume ? 'Did you improve your resume? Update them now' : 'Want to improve your Resume? Upload your resume right now'}}</h5>
+                    <div class="row">
+                        <div class="col s6 offset-s3">
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>Upload</span>
+                                    <input type="file" custom-on-change="$ctrl.fileChosenHandler" />
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="blue-grey-text darken-1" ng-if="($ctrl.resume.isUploadedResume || $ctrl.isFileChosen) && !$ctrl.resume.isSendContactDetails">If you want recruiters to find you, go to 'Contact Details' tab and change your settings</h6>
+                </div>
+            </div>
+            <div class="card-panel teal lighten-5" ng-if="($ctrl.resume.isUploadedResume || $ctrl.isFileChosen) && !$ctrl.isRemoveResume">
+                <h5 class="blue-grey-text darken-1">Want others to grade your resume? Update the fields you resume contains</h5>
+                <h6 class="blue-grey-text darken-1">You must choose at least one</h6>
+                <div class="row">
+                    <div class="col s4 offset-s2">
+                        <div class="row" ng-repeat="field in $ctrl.fieldsToGrade" ng-if="$index<=3">
+                            <div class="col">
+                                <p>
+                                    <input type="checkbox" id="{{field.name+'_resume'}}" ng-model="field.model.resume" />
+                                    <label for="{{field.name+'_resume'}}">{{field.name}}</label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="row" ng-repeat="field in $ctrl.fieldsToGrade" ng-if="$index>3">
+                            <div class="col">
+                                <p>
+                                    <input type="checkbox" id="{{field.name+'_resume'}}" ng-model="field.model.resume" />
+                                    <label for="{{field.name+'_resume'}}">{{field.name}}</label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-panel teal lighten-5" ng-if="($ctrl.resume.isUploadedResume || $ctrl.isFileChosen) && !$ctrl.isRemoveResume">
+                <h5 class="blue-grey-text darken-1">Let the crowd help you improve you resume by asking it a question</h5>
+                <div class="row">
+                    <div class="input-field col s6 offset-s3">
+                        <textarea placeholder="Type your question" id="textarea1" class="materialize-textarea" data-length="250" maxlength="250" ng-model="$ctrl.resume.openQuestion"></textarea>
+                        <!--<label ng-class="{active: $ctrl.resume.openQuestion}" for="textarea1">Type youre questions</label>-->
+                    </div>
+                </div>
+            </div>
+            <div class="row lower">
+                <div class="col s4 offset-s4">
+                    <button class="btn waves-effect waves-light" type="submit" name="action" ng-click="$ctrl.submit('resumeDetails')">
+                        Update
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </div>
+            <div class="row" ng-if="$ctrl.isError2 || $ctrl.isError1">
+                <div class="col s12 lower">
+                    <h5 class="center-align red-text fields-label">{{$ctrl.isError1 ? $ctrl.errorText1 : $ctrl.errorText2}}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

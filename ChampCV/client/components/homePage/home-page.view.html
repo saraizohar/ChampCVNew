@@ -1,0 +1,76 @@
+﻿<div class="row" ng-if="$ctrl.isLoading">
+    <div class="col s2 preloader">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-if="!$ctrl.isLoading">
+    <div class="row" ng-if="$ctrl.tasksList.length==0 || $ctrl.isError">
+        <div class="row">
+            <div class="col s2 offset-s5 empty">
+                <img src="./client/img/no-speak-monkey.png">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <div ng-if="!$ctrl.isError">
+                    <h3 class="center-align">There is no resumes to rank at this moment.</h3>
+                    <h3 class="center-align">Please stay in touch, we'll have more soon.</h3>
+                </div>
+                <div ng-if="$ctrl.isError">
+                    <h3 class="center-align">Oops, We encounter a problem.</h3>
+                    <h3 class="center-align">We are working on fixing it.</h3>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="row content">
+        <div class="col l2 xl2" ng-if="$index<5" ng-repeat="task in $ctrl.tasksList" ng-class="{'offset-l1': $first, 'offset-xl1': $first}">
+            <div class="card">
+                <div class="card-image card-panel teal lighten-5">
+                    <canvas class="materialboxed resume" id="{{'canvas'+$index}}"></canvas>
+                </div>
+                <div class="card-content">
+                    <!--<p class="desc">
+                        {{task.taskDesc}}
+                    </p>-->
+                    <a class="icon" ng-click="$ctrl.gradeCV($index)">
+                        <i class="blue-text text-darken-2 star-icon material-icons">grade</i>
+                        <p class="icon-title">Grade Me</p>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col l2 xl2" ng-if="$index>=5" ng-repeat="task in $ctrl.tasksList" ng-class="{'offset-l1': $index == 5, 'offset-xl1': $index == 5}">
+            <div class="card">
+                <div class="card-image card-panel teal lighten-5">
+                    <canvas class="materialboxed resume" id="{{'canvas'+$index}}"></canvas>
+                </div>
+                <div class="card-content">
+                    <!--<p class="desc">
+                        {{task.taskDesc}}
+                    </p>-->
+                    <a class="icon" ng-click="$ctrl.gradeCV($index)">
+                        <i class="blue-text text-darken-2 star-icon material-icons">grade</i>
+                        <p class="icon-title">Grade Me</p>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
