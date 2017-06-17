@@ -25,6 +25,7 @@
 
             this.numOfRankers = this.statisticsInfo.numOfRankers;
             this.numOfRecruiters = this.statisticsInfo.numOfRecruiters;
+            this.isEnoughRanks = this.statisticsInfo.isEnoughRanks
 
             angular.forEach(this.gradePerQuestion, function (value, key) {
                 question = this.closeQuestionsService.getQuestionByID(key);

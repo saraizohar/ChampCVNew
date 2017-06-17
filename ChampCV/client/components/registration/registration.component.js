@@ -157,6 +157,7 @@
                             this.errorText = "The resume file's size exceed the maximum size which is 3MB"
                             break;
                     }
+                    return;
                 }
             }
             return true;

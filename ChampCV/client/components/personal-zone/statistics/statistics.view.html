@@ -1,47 +1,52 @@
 ﻿<div>
-    <div class="row">
-        <div class="col s7 offset-s2">
-            <div class="col s5 card-panel teal lighten-5 offset-s1">
-                <h2 class="center brown-text"><i class="large material-icons">group</i></h2>
-                <h6 class="center-align">{{$ctrl.numOfRankers}} users has ranked your resume</h6>
-            </div>
-            <div class="col s5 card-panel teal lighten-5 offset-s1">
-                <h2 class="center brown-text"><i class="large material-icons">work</i></h2>
-                <h6 class="center-align">{{$ctrl.numOfRecruiters}} of your rankers are recruiters</h6>
+    <div ng-if="!$ctrl.isEnoughRanks">
+        <h3 class="center-align blue-grey-text darken-4">There is No Data to Display</h3>
+        <h5 class="center-align blue-grey-text darken-4">We are still collecting data for you. Rank more resumes in order to increase your resume's exposure.</h5>
+    </div>
+    <div ng-if="$ctrl.isEnoughRanks">
+        <div class="row">
+            <div class="col s7 offset-s2">
+                <div class="col s5 card-panel teal lighten-5 offset-s1">
+                    <h2 class="center brown-text"><i class="large material-icons">group</i></h2>
+                    <h6 class="center-align">{{$ctrl.numOfRankers}} users has ranked your resume</h6>
+                </div>
+                <div class="col s5 card-panel teal lighten-5 offset-s1">
+                    <h2 class="center brown-text"><i class="large material-icons">work</i></h2>
+                    <h6 class="center-align">{{$ctrl.numOfRecruiters}} of your rankers are recruiters</h6>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <!--<div class="col chart s7 offset-s2">
-            <div id="AverageGradePerQuestion"></div>
-        </div>-->
-        <div class="col s7 offset-s2">
-            <div class="card-panel teal lighten-5">
-                <div class="blue-grey-text darken-1 answer">
-                    <div class="col s12">
-                        <div class="col s8">
-                        </div>
-                        <div class="col s2 center-align">
-                            <h6 class="teal-text text-darken-2">Crowd's average</h6>
-                        </div>
-                        <div class="col s2 center-align">
-                            <h6 class="teal-text text-darken-2">My average</h6>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row" ng-repeat="question in $ctrl.gradePerQuestion" ng-class="{first: $first}">
-                        <div class="col s12 seperator">
+        <div class="row">
+            <!--<div class="col chart s7 offset-s2">
+                <div id="AverageGradePerQuestion"></div>
+            </div>-->
+            <div class="col s7 offset-s2">
+                <div class="card-panel teal lighten-5">
+                    <div class="blue-grey-text darken-1 answer">
+                        <div class="col s12">
                             <div class="col s8">
-                                <div class="close-question">{{question.questionText}}</div>
                             </div>
                             <div class="col s2 center-align">
-                                <div class="close-question-answer">{{question.crowdAvg}}</div>
+                                <h6 class="teal-text text-darken-2">Crowd's average</h6>
                             </div>
                             <div class="col s2 center-align">
-                                <div class="close-question-answer">{{question.userAvg}}</div>
+                                <h6 class="teal-text text-darken-2">My average</h6>
                             </div>
                         </div>
-
+                        <br />
+                        <div class="row" ng-repeat="question in $ctrl.gradePerQuestion" ng-class="{first: $first}">
+                            <div class="col s12 seperator">
+                                <div class="col s8">
+                                    <div class="close-question">{{question.questionText}}</div>
+                                </div>
+                                <div class="col s2 center-align">
+                                    <div class="close-question-answer">{{question.crowdAvg}}</div>
+                                </div>
+                                <div class="col s2 center-align">
+                                    <div class="close-question-answer">{{question.userAvg}}</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
