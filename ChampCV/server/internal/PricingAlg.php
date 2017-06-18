@@ -63,6 +63,7 @@ class PricingAlg
         {
             foreach ($statistic['gradePerQuestion'] as &$val)
             {
+                //no ranks...
                 $val['userAvg'] = 2.5;
                 $val['crowdAvg'] = 2.5;
             }

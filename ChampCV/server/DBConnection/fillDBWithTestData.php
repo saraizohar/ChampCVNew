@@ -66,7 +66,7 @@ for($i = 1; $i < $numOfRecruiters+$numOfUsers+1; $i++ )
         }
     }
 }
-/*
+
 //add 123 user fot test
 $fieldsToGrade = array('id_1' => 1, 'id_2' => 1, 'id_3' => 1, 'id_4' => 1, 'id_5' => 1, 'id_6' => 1,
 'id_7' => 1, 'id_8' => 1);
@@ -79,7 +79,7 @@ if (key($res) === 'error_message')
 {
     echo $res['error_message'];
     return false;
-}*/
+}//*/
 
 echo "success";
 

@@ -1,6 +1,6 @@
 <?php
 
-require_once( '../DBConnection/dataGetter.php'); //TODO HAIM should not be MOC
+require_once( '../DBConnection/dataGetter.php');
 require_once( 'TaskMatchingAlg.php');
 require_once( 'PraiorityMGR.php');
 require_once( 'PricingAlg.php');
@@ -28,7 +28,7 @@ class TasksGetter
         if (key($tasksForUI) === 'error_message')
             return $tasksForUI;
 
-        PricingAlg::calcPriceForRecruter($tasksForUI);
+        PricingAlg::calcPriceForRecruter($tasksForUI); //redunudent if user is not a recruter 
         assert(count($tasksForUI) <= $numOfTasks);
 
         $tasksForUI = array('tasksList'=>$tasksForUI);
