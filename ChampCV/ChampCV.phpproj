@@ -43,12 +43,15 @@
     <Compile Include="server\DBConnection\fillDBWithRealData.php" />
     <Compile Include="server\DBConnection\fillDBWithTestDataImproved.php" />
     <Compile Include="server\DBConnection\fillDBWithTestData.php" />
+    <Compile Include="server\DBConnection\trial.php" />
+    <Compile Include="server\libs\Gaussian.php" />
     <Compile Include="server\DBConnection\reliability.php" />
     <Compile Include="server\internal\PointsForRanking.php" />
     <Compile Include="server\internal\PraiorityMGR.php" />
     <Compile Include="server\internal\PricingAlg.php" />
     <Compile Include="server\internal\TaskMatchingAlg.php" />
     <Compile Include="server\internal\TasksGetter.php" />
+    <Compile Include="server\libs\InputInterface.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="client\" />
@@ -83,6 +86,7 @@
     <Folder Include="server\" />
     <Folder Include="server\DBConnection\" />
     <Folder Include="server\internal\" />
+    <Folder Include="server\libs\" />
     <Folder Include="server\resumes\" />
     <Folder Include="server\clientAPI\" />
   </ItemGroup>
@@ -256,6 +260,7 @@
     <Content Include="server\resumes\20.pdf" />
     <Content Include="server\resumes\21.pdf" />
     <Content Include="server\resumes\22.pdf" />
+    <Content Include="server\resumes\23.pdf" />
     <Content Include="server\resumes\3.pdf" />
     <Content Include="server\resumes\4.pdf" />
     <Content Include="server\resumes\444.pdf" />

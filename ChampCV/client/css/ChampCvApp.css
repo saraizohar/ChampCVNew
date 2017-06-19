@@ -277,6 +277,12 @@ grade-resume .contact-details {
     font-size:17px;
 }
 
+grade-resume .resume-id {
+    margin-left: 50px;
+    font-weight: 100;
+    color: #607d8b;
+}
+
 @media only screen and (max-width: 1700px) {
     grade-resume .resume-iframe-small {
         display:initial;

@@ -7,8 +7,8 @@ class Reliability
     const rankReliabilityLimit = 0.2;
     const userReliabilityLimit = 0.2;
     const rankTimeLimit = 10;
-    const W1 = 0.7; //penalty
-    const W2 = 0.3;// time
+    const W1 = 0.5;// time penalty
+    const W2 = 0.5; //ranks penalty
 
     public static function calculate_time_penalty($cv_id, $user_id)
     {
@@ -68,6 +68,9 @@ class Reliability
             elseif ($avg - $rank_time > $std * 2) { // 4.5% of values
                 return 0.25;
             }
+            else {
+                return 0; 
+            }
 
         }
         else {
@@ -82,42 +85,42 @@ class Reliability
         $query_text1 =  "
         SELECT AVG(answer_question_1) AS avg, STD(answer_question_1) AS std, count(*) AS ranks_num
         FROM rankings
-        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_1>0";
+        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_1>0 AND cv_id= :cv_id";
 
         $query_text2 =  "
         SELECT AVG(answer_question_2) AS avg, STD(answer_question_2) AS std, count(*) AS ranks_num
         FROM rankings
-        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_2>0";
+        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_2>0 AND cv_id= :cv_id";
 
         $query_text3 =  "
         SELECT AVG(answer_question_3) AS avg, STD(answer_question_3) AS std, count(*) AS ranks_num
         FROM rankings
-        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_3>0";
+        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_3>0 AND cv_id= :cv_id";
 
         $query_text4 =  "
         SELECT AVG(answer_question_4) AS avg, STD(answer_question_4) AS std, count(*) AS ranks_num
         FROM rankings
-        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_4>0";
+        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_4>0 AND cv_id= :cv_id";
 
         $query_text5 =  "
         SELECT AVG(answer_question_5) AS avg, STD(answer_question_5) AS std, count(*) AS ranks_num
         FROM rankings
-        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_5>0";
+        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_5>0 AND cv_id= :cv_id";
 
         $query_text6 =  "
         SELECT AVG(answer_question_6) AS avg, STD(answer_question_6) AS std, count(*) AS ranks_num
         FROM rankings
-        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_6>0";
+        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_6>0 AND cv_id= :cv_id";
 
         $query_text7 =  "
         SELECT AVG(answer_question_7) AS avg, STD(answer_question_7) AS std, count(*) AS ranks_num
         FROM rankings
-        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_7>0";
+        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_7>0 AND cv_id= :cv_id";
 
         $query_text8 =  "
         SELECT AVG(answer_question_8) AS avg, STD(answer_question_8) AS std, count(*) AS ranks_num
         FROM rankings
-        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_8>0";
+        WHERE rank_reliability> :rankReliabilityLimit AND answer_question_8>0 AND cv_id= :cv_id";
         ////////////////////////////////////////////////////////
         $query_text1B = "
 		SELECT  answer_question_1  as user_answer
@@ -197,6 +200,7 @@ class Reliability
             $query_statement = $db->prepare($query_text);
            // $query_statement->bindValue(':answer_question_i', $answer_question_i);
             $query_statement->bindValue(':rankReliabilityLimit', Reliability::rankReliabilityLimit);
+            $query_statement->bindValue(':cv_id', $cv_id);
             $query_statement->execute();
             $q01 = $query_statement->fetch(PDO::FETCH_ASSOC);
             if ($q01 == false) {//can be zero results for that question
@@ -234,21 +238,17 @@ class Reliability
         }
         //<ToDo> liran addition:
         if ($user_answer >0 and $ranks_num > 8){
-            if (abs($user_answer - $avg) > $std * 3){
+            if (abs($user_answer - $avg) > $std * 2){
                 return 1;
-            } elseif (abs($user_answer - $avg) > $std * 2){
+            } elseif (abs($user_answer - $avg) > $std * 1.5){
                 return 0.67;
+            } else {
+                return 0;
             }
         }
         else{
                 return 0;
-            }
-        //</ToDO>
-        //if ($user_answer >0 and $ranks_num > 10 and abs($user_answer - $avg) > $std * 2) {
-          //  return 1;
-        //} else {
-         //   return 0;
-        //}
+        }
     }
 
     public static function mean_ranks_penalty($user_id, $cv_id)
@@ -353,7 +353,7 @@ class Reliability
         }
     }
 
-    public static function cal_and_update_user_reliability($user_id)//ToDo validate[]
+    public static function cal_and_update_user_reliability($user_id)
     {
         $user_reliability=Reliability::cal_user_reliability($user_id);
         global $db;

@@ -123,7 +123,7 @@
                 this.password &&
                 this.confirmPassword &&
                 this.phoneNumber &&
-                ((!this.isRecruiter && this.city) || (this.isRecruiter)))) {
+                ((!this.isRecruiter && this.city) || (this.isRecruiter && this.companyName)))) {
                 this.isError = true;
                 this.isEmptyFields = true;
                 this.errorText = "You must enter all detailes"
