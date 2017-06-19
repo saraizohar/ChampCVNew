@@ -248,7 +248,6 @@
     <Content Include="server\resumes\10.pdf" />
     <Content Include="server\resumes\11.pdf" />
     <Content Include="server\resumes\12.pdf" />
-    <Content Include="server\resumes\123.pdf" />
     <Content Include="server\resumes\13.pdf" />
     <Content Include="server\resumes\14.pdf" />
     <Content Include="server\resumes\15.pdf" />
@@ -263,14 +262,8 @@
     <Content Include="server\resumes\23.pdf" />
     <Content Include="server\resumes\3.pdf" />
     <Content Include="server\resumes\4.pdf" />
-    <Content Include="server\resumes\444.pdf" />
-    <Content Include="server\resumes\111.pdf" />
     <Content Include="server\resumes\5.pdf" />
-    <Content Include="server\resumes\555.pdf" />
-    <Content Include="server\resumes\222.pdf" />
     <Content Include="server\resumes\6.pdf" />
-    <Content Include="server\resumes\666.pdf" />
-    <Content Include="server\resumes\333.pdf" />
     <Content Include="server\resumes\7.pdf" />
     <Content Include="server\resumes\8.pdf" />
     <Content Include="server\resumes\9.pdf" />
