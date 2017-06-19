@@ -23,8 +23,8 @@
                 question.userAvg = parseFloat(question.userAvg).toFixed(2);
             });
 
-            this.numOfRankers = this.statisticsInfo.numOfRankers;
-            this.numOfRecruiters = this.statisticsInfo.numOfRecruiters;
+            this.numOfRankers = parseInt(this.statisticsInfo.numOfRankers);
+            this.numOfRecruiters = parseInt(this.statisticsInfo.numOfRecruiters);
             this.isEnoughRanks = this.statisticsInfo.isEnoughRanks
 
             angular.forEach(this.gradePerQuestion, function (value, key) {
