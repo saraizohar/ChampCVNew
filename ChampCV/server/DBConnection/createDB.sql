@@ -130,5 +130,5 @@ CREATE TABLE reports(
 	report_answer INT(1) NOT NULL, 
 	/*cv_id or user_id of the user who caused the report*/
 	reported_id INT NOT NULL,
-	PRIMARY KEY(member_id, reported_id)
+	PRIMARY KEY(member_id, report_cv, report_comments, report_answer, reported_id)
 );

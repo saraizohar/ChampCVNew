@@ -40,10 +40,8 @@
     <Compile Include="server\clientAPI\login.php" />
     <Compile Include="server\clientAPI\getDataFromDB.php" />
     <Compile Include="server\clientAPI\loginUpdateDB.php" />
-    <Compile Include="server\DBConnection\fillDBWithRealData.php" />
     <Compile Include="server\DBConnection\fillDBWithTestDataImproved.php" />
     <Compile Include="server\DBConnection\fillDBWithTestData.php" />
-    <Compile Include="server\DBConnection\trial.php" />
     <Compile Include="server\libs\Gaussian.php" />
     <Compile Include="server\DBConnection\reliability.php" />
     <Compile Include="server\internal\PointsForRanking.php" />
@@ -244,6 +242,7 @@
     <Content Include="client\services\fields.service.js" />
     <Content Include="client\services\registration.service.js" />
     <Content Include="client\services\login.service.js" />
+    <Content Include="server\DBConnection\createDB.sql" />
     <Content Include="server\resumes\1.pdf" />
     <Content Include="server\resumes\10.pdf" />
     <Content Include="server\resumes\11.pdf" />
