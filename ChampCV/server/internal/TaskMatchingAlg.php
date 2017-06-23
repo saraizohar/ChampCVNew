@@ -43,7 +43,6 @@ class TaskMatchingAlg
     private static function calculateGrade(&$avalableTasks, $rankerCat)
     {
         $totalNumOfRanks = TaskMatchingAlg::getTotalRanks($avalableTasks);
-        assert($totalNumOfRanks != 0 or count($avalableTasks) == 0);
 
         if($totalNumOfRanks == 0)
         {
