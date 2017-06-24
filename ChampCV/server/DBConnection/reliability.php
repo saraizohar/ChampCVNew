@@ -26,7 +26,8 @@ class Reliability
                 $toReturn = array('error_message' => "no match found in the DB for time_stat");
                 return $toReturn;
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
@@ -46,7 +47,8 @@ class Reliability
                 $toReturn = array('error_message' => "no match found in the DB for user_time");
                 return $toReturn;
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $user_time = array('error_message' => $error_message);
             return $user_time;
@@ -69,12 +71,12 @@ class Reliability
                 return 0.25;
             }
             else {
-                return 0; 
+                return 0;
             }
 
         }
         else {
-                return 0;
+            return 0;
         }
 
     }
@@ -198,7 +200,7 @@ class Reliability
         }
         try {
             $query_statement = $db->prepare($query_text);
-           // $query_statement->bindValue(':answer_question_i', $answer_question_i);
+            // $query_statement->bindValue(':answer_question_i', $answer_question_i);
             $query_statement->bindValue(':rankReliabilityLimit', Reliability::rankReliabilityLimit);
             $query_statement->bindValue(':cv_id', $cv_id);
             $query_statement->execute();
@@ -213,7 +215,8 @@ class Reliability
                 $avg = $q01['avg'];
                 $std = $q01['std'];
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
@@ -231,7 +234,8 @@ class Reliability
             else{
                 $user_answer = $q02['user_answer'];
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $user_time = array('error_message' => $error_message);
             return $user_time;
@@ -247,7 +251,7 @@ class Reliability
             }
         }
         else{
-                return 0;
+            return 0;
         }
     }
 
@@ -295,7 +299,8 @@ class Reliability
                 $toReturn = array('error_message' => "no match found in the DB for update_all_rank_reliability");
                 return $toReturn;
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
@@ -330,7 +335,8 @@ class Reliability
                 $avg = $q01['avg'];
                 $rank_num=$q01['rank_num'];
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
@@ -344,7 +350,8 @@ class Reliability
         else {
             try{
                 $user_reliability = ((float)$avg + (1 - (float)$spu) + (1 - (float)$spcv) + (1 - (float)$sprp)) / 4;
-            }catch (RuntimeException $ex) {
+            }
+            catch (RuntimeException $ex) {
                 $error_message = $ex->getMessage();
                 $err = array('error_message' => $error_message);
                 return $err;
@@ -372,7 +379,8 @@ class Reliability
             else{
                 $is_regular_user=1;
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
@@ -462,7 +470,8 @@ class Reliability
             else{
                 $r_user_num=$reported_num_user['reported_num_user'];
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $reported_num_user = array('error_message' => $error_message);
             return $reported_num_user;
@@ -481,7 +490,8 @@ class Reliability
             else{
                 $r_rec_num=$reported_num_recruiter['reported_num_recruiter'];
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $reported_num_recruiter = array('error_message' => $error_message);
             return $reported_num_recruiter;
@@ -512,7 +522,8 @@ class Reliability
             if ($q01 == false) {// no cv uploaded by this user
                 return 0;
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
@@ -537,7 +548,8 @@ class Reliability
                 $reported_num_user = $q02['reported_num_user'];
             }
 
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage(); //ToDo we shouldn't reach here []
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
@@ -561,7 +573,8 @@ class Reliability
             else{
                 $reported_num_recruiter = $q03['reported_num_recruiter'];
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
@@ -583,7 +596,8 @@ class Reliability
             else{
                 $rank_num = $q04['rank_num'];
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
@@ -631,7 +645,8 @@ class Reliability
             if ($q01 == false) {
                 return 0;
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $reported_num_user = array('error_message' => $error_message);
             return $reported_num_user;
@@ -656,7 +671,8 @@ class Reliability
                     $toReturn = array('error_message' => "no match found in the DB for spam_wrong_reports_penalty");
                     return $toReturn;
                 }
-            } catch (PDOException $ex) {
+            }
+            catch (PDOException $ex) {
                 $error_message = $ex->getMessage();
                 $reported_num_user = array('error_message' => $error_message);
                 return $reported_num_user;
@@ -678,7 +694,8 @@ class Reliability
                 } else {
                     $rank_num = $query_text2['rank_num'];
                 }
-            } catch (PDOException $ex) {
+            }
+            catch (PDOException $ex) {
                 $error_message = $ex->getMessage();
                 $reported_num_user = array('error_message' => $error_message);
                 return $reported_num_user;
@@ -751,7 +768,8 @@ class Reliability
             else{
                 return $q01['u_ranks_num'];
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $err = array('error_message' => $error_message);
             return $err;
@@ -781,7 +799,8 @@ class Reliability
             else{
                 return $q01['r_ranks_num'];
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $err = array('error_message' => $error_message);
             return $err;
@@ -792,9 +811,9 @@ class Reliability
     {
         global $db;
         switch ($answer_question_i) {
-                case "answer_question_1":
-                    $query_text1 = "
-                        SELECT SUM(answer_question_1) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+            case "answer_question_1":
+                $query_text1 = "
+                        SELECT SUM(answer_question_1) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_1 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
@@ -802,16 +821,16 @@ class Reliability
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
 
 
-                    $query_text2 = "SELECT SUM(answer_question_1) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+                $query_text2 = "SELECT SUM(answer_question_1) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_1 ELSE 0 END) AS cv_u_sum
                       FROM rankings, users
                       WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_1>0 AND rankings. ranking_person_id= users. user_id
                       AND users.user_reliability >:userReliabilityLimit";
-                    break;
-                case "answer_question_2":
-                    $query_text1 = "
-                        SELECT SUM(answer_question_2) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+                break;
+            case "answer_question_2":
+                $query_text1 = "
+                        SELECT SUM(answer_question_2) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_2 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
@@ -819,16 +838,16 @@ class Reliability
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
 
 
-                    $query_text2 = "SELECT SUM(answer_question_2) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+                $query_text2 = "SELECT SUM(answer_question_2) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_2 ELSE 0 END) AS cv_u_sum
                       FROM rankings, users
                       WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_2>0 AND rankings. ranking_person_id= users. user_id
                       AND users.user_reliability >:userReliabilityLimit";
-                    break;
-                case "answer_question_3":
-                    $query_text1 = "
-                        SELECT SUM(answer_question_3) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+                break;
+            case "answer_question_3":
+                $query_text1 = "
+                        SELECT SUM(answer_question_3) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_3 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
@@ -836,16 +855,16 @@ class Reliability
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
 
 
-                    $query_text2 = "SELECT SUM(answer_question_3) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+                $query_text2 = "SELECT SUM(answer_question_3) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_3 ELSE 0 END) AS cv_u_sum
                       FROM rankings, users
                       WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_3>0 AND rankings. ranking_person_id= users. user_id
                       AND users.user_reliability >:userReliabilityLimit";
-                    break;
-                  case "answer_question_4":
-                      $query_text1 = "
-                        SELECT SUM(answer_question_4) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+                break;
+            case "answer_question_4":
+                $query_text1 = "
+                        SELECT SUM(answer_question_4) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_4 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
@@ -853,16 +872,16 @@ class Reliability
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
 
 
-                      $query_text2 = "SELECT SUM(answer_question_4) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+                $query_text2 = "SELECT SUM(answer_question_4) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_4 ELSE 0 END) AS cv_u_sum
                       FROM rankings, users
                       WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_4>0 AND rankings. ranking_person_id= users. user_id
                       AND users.user_reliability >:userReliabilityLimit";
-                    break;
-                case "answer_question_5":
-                    $query_text1 = "
-                        SELECT SUM(answer_question_5) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+                break;
+            case "answer_question_5":
+                $query_text1 = "
+                        SELECT SUM(answer_question_5) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_5 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
@@ -870,16 +889,16 @@ class Reliability
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
 
 
-                    $query_text2 = "SELECT SUM(answer_question_5) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+                $query_text2 = "SELECT SUM(answer_question_5) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_5 ELSE 0 END) AS cv_u_sum
                       FROM rankings, users
                       WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_5>0 AND rankings. ranking_person_id= users. user_id
                       AND users.user_reliability >:userReliabilityLimit";
-                        break;
-                case "answer_question_6":
-                    $query_text1 = "
-                        SELECT SUM(answer_question_6) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+                break;
+            case "answer_question_6":
+                $query_text1 = "
+                        SELECT SUM(answer_question_6) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_6 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
@@ -887,16 +906,16 @@ class Reliability
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
 
 
-                    $query_text2 = "SELECT SUM(answer_question_6) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+                $query_text2 = "SELECT SUM(answer_question_6) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_6 ELSE 0 END) AS cv_u_sum
                       FROM rankings, users
                       WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_6>0 AND rankings. ranking_person_id= users. user_id
                       AND users.user_reliability >:userReliabilityLimit";
-                    break;
-                case "answer_question_7":
-                    $query_text1 = "
-                        SELECT SUM(answer_question_7) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+                break;
+            case "answer_question_7":
+                $query_text1 = "
+                        SELECT SUM(answer_question_7) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_7 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
@@ -904,16 +923,16 @@ class Reliability
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
 
 
-                    $query_text2 = "SELECT SUM(answer_question_7) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+                $query_text2 = "SELECT SUM(answer_question_7) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_7 ELSE 0 END) AS cv_u_sum
                       FROM rankings, users
                       WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_7>0 AND rankings. ranking_person_id= users. user_id
                       AND users.user_reliability >:userReliabilityLimit";
-                    break;
-                  case "answer_question_8":
-                      $query_text1 = "
-                        SELECT SUM(answer_question_8) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num, 
+                break;
+            case "answer_question_8":
+                $query_text1 = "
+                        SELECT SUM(answer_question_8) AS r_sum, count(*) AS r_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_r_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_8 ELSE 0 END) AS cv_r_sum
                         FROM rankings, recruiters
                         WHERE rank_reliability> :rankReliabilityLimit
@@ -921,17 +940,17 @@ class Reliability
                         AND recruiters. recruiter_reliability> :userReliabilityLimit";
 
 
-                      $query_text2 = "SELECT SUM(answer_question_8) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num, 
+                $query_text2 = "SELECT SUM(answer_question_8) AS u_sum, count(*) AS u_ranks_num, count(CASE WHEN cv_id=:cv_id THEN 1 ELSE NULL END) AS cv_u_ranks_num,
 		              sum(CASE WHEN cv_id=:cv_id THEN answer_question_8 ELSE 0 END) AS cv_u_sum
                       FROM rankings, users
                       WHERE rank_reliability> :rankReliabilityLimit AND
                          answer_question_8>0 AND rankings. ranking_person_id= users. user_id
                       AND users.user_reliability >:userReliabilityLimit";
-                    break;
-                default:
-                    $query_text1 = "";
-                    $query_text2 = "";
-                    }
+                break;
+            default:
+                $query_text1 = "";
+                $query_text2 = "";
+        }
 
         try {
             $query_statement = $db->prepare($query_text1);
@@ -960,7 +979,8 @@ class Reliability
                     $cv_r_sum= $q01['cv_r_sum'];
                 }
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $reported_num_user = array('error_message' => $error_message);
             return $reported_num_user;
@@ -996,36 +1016,43 @@ class Reliability
                     $cv_u_sum= $q02['cv_u_sum'];
                 }
             }
-        } catch (PDOException $ex) {
+        }
+        catch (PDOException $ex) {
             $error_message = $ex->getMessage();
             $err = array('error_message' => $error_message);
             return $err;
         }
         $total_rank_num = $u_ranks_num + $r_ranks_num;
-        
-        
+
+
         $total_cv_rank_num = $cv_u_ranks_num + $cv_r_ranks_num;
 
         if ($total_rank_num==0){
             $total_avg_res=0;
         }
         else {
-             try {
-                 if ($u_ranks_num>0 and $r_ranks_num>0) {
-                     $total_avg_res = (($r_sum * 2 / 3) + ($u_sum / 3)) / $total_rank_num;
-                 }
-                 else if($u_ranks_num>0){
-                     $total_avg_res=$u_sum/ $total_rank_num;
-                 }
-                 else{
-                     $total_avg_res=$r_sum/ $total_rank_num;
-                 }
-             }
-             catch (PDOException $ex) {
-                 $error_message = $ex->getMessage();
-                 $err = array('error_message' => $error_message);
-                 return $err;
-             }
+            try {
+                if ($u_ranks_num>0 and $r_ranks_num>0) {
+                    $f_r=$r_sum/$total_rank_num;
+                    $f_u=$u_sum/$total_rank_num;
+                    $w_r=2/3;
+                    $w_u=1/3;
+                    $avg_r=$r_sum/$r_ranks_num;
+                    $avg_u=$u_sum/$u_ranks_num;
+                    $total_avg_res = (($f_u*$w_u*$avg_u) + ($f_r*$w_r*$avg_r)) / ($f_u*$w_u+$f_r*$w_r);
+                }
+                else if($u_ranks_num>0){
+                    $total_avg_res=$u_sum/ $u_ranks_num;
+                }
+                else{
+                    $total_avg_res=$r_sum/ $r_ranks_num;
+                }
+            }
+            catch (PDOException $ex) {
+                $error_message = $ex->getMessage();
+                $err = array('error_message' => $error_message);
+                return $err;
+            }
         }
         if ($total_cv_rank_num==0){
             $total_cv_avg_res=0;
@@ -1033,7 +1060,13 @@ class Reliability
         else {
             try {
                 if ($cv_u_ranks_num>0 and $cv_r_ranks_num>0) {
-                    $total_cv_avg_res = (($cv_r_sum * 2 / 3) + ($cv_u_sum / 3)) / $total_cv_rank_num;
+                    $f_r=$cv_r_sum/$total_cv_rank_num;
+                    $f_u=$cv_u_sum/$total_cv_rank_num;
+                    $w_r=2/3;
+                    $w_u=1/3;
+                    $avg_r=$cv_r_sum/$cv_r_ranks_num;
+                    $avg_u=$cv_u_sum/$cv_u_ranks_num;
+                    $total_cv_avg_res = (($f_u*$w_u*$avg_u) + ($f_r*$w_r*$avg_r)) / ($f_u*$w_u+$f_r*$w_r);
                 }
                 else if($cv_u_ranks_num>0){
                     $total_cv_avg_res=$cv_u_sum/ $total_cv_rank_num;
@@ -1042,7 +1075,7 @@ class Reliability
                     $total_cv_avg_res=$cv_r_sum/ $total_cv_rank_num;
                 }
 
-      
+
             }
             catch (PDOException $ex) {
                 $error_message = $ex->getMessage();
