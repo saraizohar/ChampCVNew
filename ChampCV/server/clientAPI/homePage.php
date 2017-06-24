@@ -12,7 +12,7 @@ if($_SERVER["REQUEST_METHOD"] === 'POST'){
             $cid = $_POST["cid"];
             $isRecruiter = $_POST["isRecruiter"] == 'true';
 
-            $result2 = TasksGetter::getTasks($cid, 10);
+            $result2 = TasksGetter::getTasks($cid, 10, $isRecruiter);
             
             break;
     }

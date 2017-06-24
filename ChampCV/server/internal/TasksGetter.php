@@ -9,7 +9,7 @@ define("basePrice", 66);;
 
 class TasksGetter
 {
-    public static function getTasks($rankerID, $numOfTasks)
+    public static function getTasks($rankerID, $numOfTasks, $isRecruter)
     {
         $tasks = TaskMatchingAlg::getTasks($rankerID, $numOfTasks);
         if (key($tasks) === 'error_message')
@@ -28,7 +28,10 @@ class TasksGetter
         if (key($tasksForUI) === 'error_message')
             return $tasksForUI;
 
-        PricingAlg::calcPriceForRecruter($tasksForUI); //redunudent if user is not a recruter 
+        $ret = PricingAlg::calcPriceForRecruter($tasksForUI,$isRecruter); //redunudent if user is not a recruter
+        if ($ret != null)
+            return $ret;
+
         assert(count($tasksForUI) <= $numOfTasks);
 
         $tasksForUI = array('tasksList'=>$tasksForUI);

@@ -71,18 +71,28 @@ class PricingAlg
         return $statistic['gradePerQuestion'];
     }
 
-    public static function calcPriceForRecruter(&$tasks)
+    public static function calcPriceForRecruter(&$tasks, $isRecruter)
     {   
-        
-        foreach ($tasks as &$task)
+        if ($isRecruter) //no need for prices
         {
-            $stats = PricingAlg::getStats($task);
-            if (key($stats) === 'error_message')
-                return $stats;
-
-            $task['price'] = PricingAlg::getPrice($stats);
+            foreach ($tasks as &$task)
+            {
+                $task['price'] = basePrice;
+            }
         }
 
+        else
+        {
+            foreach ($tasks as &$task)
+            {
+                $stats = PricingAlg::getStats($task);
+                if (key($stats) === 'error_message')
+                    return $stats;
+
+                $task['price'] = PricingAlg::getPrice($stats);
+            }
+            
+        }
         return null;
     }
 }
