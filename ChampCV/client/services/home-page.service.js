@@ -12,12 +12,12 @@
             /*
                 Get resume list for grading from server
             */
-            getTasksList: function (cid) {
+            getTasksList: function (cid, isRecruiter) {
                 return $q(function (resolve, reject) {
                     $http({
                         method: 'POST',
                         url: './server/clientAPI/homePage.php',
-                        data: 'action=getTasksList&cid=' + cid,
+                        data: 'action=getTasksList&cid=' + cid + '&isRecruiter=' + isRecruiter,
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         }

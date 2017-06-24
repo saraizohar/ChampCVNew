@@ -31,7 +31,7 @@
             get resumes to grade list
         */
         getTasksList: function () {
-            return this.homePageService.getTasksList(this.user.cid);
+            return this.homePageService.getTasksList(this.user.cid, this.user.isRecruiter);
         },
         /*
             upload resumes
