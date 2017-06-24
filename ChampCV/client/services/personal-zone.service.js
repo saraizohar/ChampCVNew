@@ -1,6 +1,6 @@
 ﻿define(function () {
     /**
-    * responsible got handling server requests
+    * responsible for handling server requests
     **/
     function personalZone($http, $q) {
 
@@ -9,6 +9,9 @@
         }
 
         return {
+            /*
+                get statistics from server
+            */
             getAnalyze: function (cid) {
                 return $q(function (resolve, reject) {
                     $http({
@@ -30,6 +33,9 @@
                     });
                 });
             },
+            /*
+                send the server a report
+            */
             report: function (cid, id, isAnswer) {
                 return $q(function (resolve, reject) {
                     var action = isAnswer ? 'reportAnswer' : 'reportComment';

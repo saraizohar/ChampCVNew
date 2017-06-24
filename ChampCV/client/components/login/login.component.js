@@ -1,5 +1,7 @@
 ﻿define(['angular'], function (angular) {
-
+    /*
+        Login page component
+    */
     function LoginCtrl(loginService, $rootScope) {
         this.loginService = loginService;
         this.$rootScope = $rootScope;
@@ -10,6 +12,9 @@
     }
 
     LoginCtrl.prototype = {
+        /*
+            User clicked "Login" button
+        */
         submit: function () {
             var errorMsg;
 
@@ -24,6 +29,7 @@
                     // handle error
                     this.isError = true;
                     errorMsg = result.data.error_message;
+                    // Show error message according to relevant error
                     switch (errorMsg) {
                         case "incorrect password":
                             this.errorText = 'The username and password does not match';
@@ -43,10 +49,16 @@
                 }.bind(this));
             }
         },
+        /*
+            User asked to go to login form
+        */
         goToLogin: function () {
             this.isShowLogin = true;
             Materialize.fadeInImage('#index-banner');
         },
+        /*
+            User asked to go to registration form
+        */
         signUpHandler: function () {
             this.$rootScope.$emit("registration:clicked");
         }

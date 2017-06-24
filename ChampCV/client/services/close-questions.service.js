@@ -1,6 +1,6 @@
 ﻿define(function () {
     /**
-    * responsible got handling server requests
+    * Saves the closed question
     **/
     function CloseQuestionsService() {
         var _closeQuestions = [
@@ -15,9 +15,15 @@
         ];
 
         return {
+            /*
+                retuena new reference of the questions list
+            */
             getQuestionsList: function () {
                 return this.copy(_closeQuestions);
             },
+            /*
+                Get question object according to ID
+            */
             getQuestionByID: function (id) {
                 var wantedQuestion;
                 for (var i = 0; i < _closeQuestions.length; i++) {
@@ -28,6 +34,9 @@
                 }
                 return wantedQuestion;
             },
+            /*
+                Copy the list 
+            */
             copy: function () {
                 var list = [];
                 _closeQuestions.forEach(function (question) {

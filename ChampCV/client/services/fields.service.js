@@ -1,6 +1,6 @@
 ﻿define(function () {
     /**
-    * responsible got handling server requests
+    * Saves the possible fields in resume metadata
     **/
     function FieldsService() {
         var _fields = [{ id: 'id_1', name: "Full-Stack Developer"},
@@ -14,9 +14,15 @@
         ];
 
         return {
+            /*
+                Return a new reference of the list
+            */
             getFieldsList: function () {
                 return this.copy(_fields);
             },
+            /*
+                return a field object according to ID
+            */
             getFieldByID: function (id) {
                 var wantedField;
                 for(var i = 0; i < _fields.length; i++){
@@ -27,6 +33,9 @@
                 }
                 return wantedField;
             },
+            /*
+                Copy the list
+            */
             copy: function () {
                 var list = [];
                 _fields.forEach(function (field) {

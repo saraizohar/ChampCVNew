@@ -1,12 +1,18 @@
 ﻿define(['angular'], function (angular) {
-
+    /*
+        Comments tab component
+    */
     function AnswersCtrl(personalZoneService) {
         this.personalZoneService = personalZoneService;
         
     }
 
     AnswersCtrl.prototype = {
+        /*
+            Called when binding are ready
+        */
         $onInit: function () {
+            // Materialized initialization
             setTimeout(function () {
                 $(document).ready(function () {
                     $('.tooltipped').tooltip();
@@ -14,6 +20,9 @@
             }, 3000);
             
         },
+        /*
+            User clicked on "Report" button 
+        */
         report: function (comment) {
             var id = comment.id;
 

@@ -1,11 +1,16 @@
 ﻿define(['angular'], function (angular) {
-
+    /*
+        Answers tab component
+    */
     function AnswersCtrl(personalZoneService) {
         this.personalZoneService = personalZoneService;
         
     }
 
     AnswersCtrl.prototype = {
+        /*
+            Called when binding are ready
+        */
         $onInit: function () {
             setTimeout(function () {
                 $(document).ready(function () {
@@ -14,6 +19,9 @@
             }, 3000);
             
         },
+        /*
+            User clicked on "Report" button 
+        */
         report: function (answer) {
             var id = answer.id;
 

@@ -13,9 +13,9 @@
 </head>
 <body>
     <div ng-controller="champCvCtrl as champCvCtrl">
-        <nav class="white" role="navigation" ng-if="champCvCtrl.isLoggedIn">
+        <nav class="white" role="navigation" ng-if="champCvCtrl.isLoggedIn || champCvCtrl.pages[1]">
             <div class="nav-wrapper container">
-                <a id="logo-container" ng-click="champCvCtrl.logoClicked()" ng-if="champCvCtrl.isLoggedIn" class="brand-logo"><img class="champcv-logo" src="./client/img/LOGO.jpg"></a>
+                <a id="logo-container" ng-click="champCvCtrl.logoClicked()" class="brand-logo"><img class="champcv-logo" src="./client/img/LOGO.jpg"></a>
                 <ul class="right hide-on-med-and-down" ng-if="champCvCtrl.isLoggedIn">
                     <li><a ng-click="champCvCtrl.personalZoneClicked()"><i class="material-icons personal-zone-button">face</i><span class="personal-zone-button-text">{{champCvCtrl.user.name}}</span></a></li>
                     <li><a ng-click="champCvCtrl.settingsClicked()"><i class="material-icons">settings</i></a></li>
@@ -37,7 +37,6 @@
     <!--  Scripts-->
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="client/js/materialize.js"></script>
-    <script src="client/js/init.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/processing.js/1.4.1/processing-api.min.js"></script>
     <script type="text/javascript" src="https://rawgithub.com/mozilla/pdf.js/gh-pages/build/pdf.js"></script>
     

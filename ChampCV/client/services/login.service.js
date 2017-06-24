@@ -1,6 +1,6 @@
 ﻿define(function () {
     /**
-    * responsible got handling server requests
+    * responsible for handling server requests
     **/
     function LoginService($http, $q) {
 
@@ -9,6 +9,9 @@
         }
 
         return {
+            /*
+                ask the server to login. 
+            */
             login: function (username, password) {
                 return $q(function (resolve, reject) {
                     $http({

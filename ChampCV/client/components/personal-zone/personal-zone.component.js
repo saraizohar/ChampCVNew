@@ -1,5 +1,11 @@
 ﻿define(['angular'], function (angular) {
-
+    /*
+        Personal zone conponent
+        The conponent contains 3 additinal comnponents:
+        - answers
+        - comments
+        - statistics
+    */
     function PersonalZoneCtrl(personalZoneService) {
         this.personalZoneService = personalZoneService;
         this.isLoading = true;
@@ -7,9 +13,16 @@
     }
 
     PersonalZoneCtrl.prototype = {
+        /*
+            Called when all bindings are ready
+        */
         $onInit: function () {
+            // Get statistics to show
             this.personalZoneService.getAnalyze(this.user.cid).then(function (result) {
+                // If the user did not upload a resume, show a suitable message
                 this.isUploadedResume = result.data.isUploadedResume
+
+                // statistics data is send to relevant component as bindings
                 this.answers = result.data.answers;
                 this.comments = result.data.comments;
                 this.statistic = result.data.statistic;
@@ -20,6 +33,8 @@
                 this.isLoading = false;
             }.bind(this));
 
+
+            // Materialozed initialization
             $(document).ready(function () {
                 $('ul.tabs').tabs();
                 $('ul.tabs').tabs('select_tab', 'GeneralStats');

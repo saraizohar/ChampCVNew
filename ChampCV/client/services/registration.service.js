@@ -1,6 +1,6 @@
 ﻿define(function () {
     /**
-    * responsible got handling server requests
+    * responsible for handling server requests
     **/
     function LoginService($http, $q, fileUploadService) {
 
@@ -9,6 +9,9 @@
         }
 
         return {
+            /*
+                send the server the registration form data
+            */
             register: function (registrationData, file) {
                 var deferred = $q.defer(),
                     formData = new FormData();

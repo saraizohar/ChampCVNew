@@ -19,6 +19,9 @@
     }
 
     RegistrationCtrl.prototype = {
+        /*
+            Called when the user chosen a file
+        */
         fileChosenHandler: function (event) {
             var ctrl = this.$parent.$ctrl;
             ctrl.$rootScope.$evalAsync(function () {
@@ -34,6 +37,9 @@
             });
             
         },
+        /*
+            User clicked "Submit" button
+        */
         submit: function () {
             var userObj, errorMsg;
             if (this._validate()) {
@@ -87,6 +93,9 @@
                 
             }
         },
+        /*
+            validate registration form fields before submiting
+        */
         _validate: function () {
             this.isError = false;
             var isOneChecked = false,
@@ -162,9 +171,16 @@
             }
             return true;
         },
+        /*
+            when the val is 'undefined' the JSON.encode remove the property from the object.
+            Therefore, we need to put NULL instead of undefined.
+        */
         setVal: function (val) {
             return val ? val : null;
         },
+        /*
+            Get all possible fields in resume to show
+        */
         _initFields: function (result) {
             this.fields = this.fieldsService.getFieldsList();
             this.fields.forEach(function (field) {

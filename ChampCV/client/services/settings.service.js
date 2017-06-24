@@ -1,6 +1,6 @@
 ﻿define(function () {
     /**
-    * responsible got handling server requests
+    * responsible for handling server requests
     **/
     function SettingsService($http, $q) {
 
@@ -9,6 +9,9 @@
         }
 
         return {
+            /*
+               get user deails from server
+            */
             getUserDetails: function (cid, isRecruiter) {
                 return $q(function (resolve, reject) {
                     $http({
@@ -30,6 +33,9 @@
                     });
                 });
             },
+            /*
+                Update user contact details
+            */
             updateContactDetails: function (data) {
                 var dataStr = JSON.stringify(data);
 
@@ -53,6 +59,9 @@
                     });
                 });
             },
+            /*
+                Update user fields to grade 
+            */
             updateFieldsToGrade: function (data) {
                 var dataStr = JSON.stringify(data);
 
@@ -76,6 +85,12 @@
                     });
                 });
             },
+            /*
+                Update resume details. Contains:
+                - resume
+                - fields in resume
+                - open question
+            */
             updateResumeDetails: function (data, file) {
                 var deferred = $q.defer(),
                     formData = new FormData();

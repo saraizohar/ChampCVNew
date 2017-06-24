@@ -1,6 +1,6 @@
 ﻿define(function () {
     /**
-    * responsible got handling server requests
+    * responsible for handling server requests
     **/
     function HomePageService($http, $q) {
 
@@ -9,6 +9,9 @@
         }
 
         return {
+            /*
+                Get resume list for grading from server
+            */
             getTasksList: function (cid) {
                 return $q(function (resolve, reject) {
                     $http({

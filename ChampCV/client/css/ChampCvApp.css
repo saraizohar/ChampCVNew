@@ -128,13 +128,10 @@ home-page .content {
 
 home-page .card-image {
     margin: 0;
-    /*width: 271px;
-    height: 290px;*/
     height: 290px;
 }
 
 home-page .card {
-    /*width: 272px;*/
     height: 362px;
 }
 
@@ -150,15 +147,6 @@ home-page .desc {
 }
 
 home-page .icon {
-    /*display: inline-block;
-    float: right;
-    width: 40%;
-    margin-top:-15px;
-    color: black;
-    cursor: pointer;*/
-
-   
-   
     width: 100%;
     margin-top:-15px;
     color: black;
@@ -173,13 +161,7 @@ home-page .icon-title {
 
 home-page .star-icon {
     font-size: 2rem;
-    /*border-left: solid;
-    border-width: 1px;*/
     padding-left: 33px;
-}
-
-home-page .material-placeholder {
-    /*height: 245px;*/
 }
 
 home-page .card .card-content {

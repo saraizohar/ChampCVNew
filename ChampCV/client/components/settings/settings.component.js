@@ -11,7 +11,11 @@
     }
 
     SettingsCtrl.prototype = {
+        /*
+            Called when all bindings are ready
+        */
         $onInit: function () {
+            // Get user details from server
             this.settingsService.getUserDetails(this.user.cid, this.user.isRecruiter).then(function (result) {
                 this.contactDetails = result.data.contactDetails;
 
@@ -28,8 +32,6 @@
 
                 this.initFields(result);
                 
-                
-
                 $(document).ready(function () {
                     $('ul.tabs').tabs();
                 });
@@ -39,6 +41,10 @@
                 this.isLoading = false;
             }.bind(this));
         },
+        /*
+            Get all possible fields in resume 
+            Mark fields that are already in resume 
+        */
         initFields: function (result) {
             this.fieldsToGrade = this.fieldsService.getFieldsList();
             this.fieldsToGrade.forEach(function (field) {
@@ -55,6 +61,9 @@
                 }
             }.bind(this));
         },
+        /*
+            Called when user chose a new file
+        */
         fileChosenHandler: function (event) {
             var ctrl = this.$ctrl;
             ctrl.$rootScope.$evalAsync(function () {
@@ -69,6 +78,9 @@
                 }
             });
         },
+        /*
+            user clicked "Update" button
+        */
         submit: function (tab) {
             var data, atLeastOne, fileValidate;
 
@@ -194,6 +206,9 @@
                     break;
             }
         },
+        /*
+            Upload PDF and convert to picture to show it.
+        */
         readResume: function (resume) {
             PDFJS.getDocument(resume || this.resume.url).then(function (pdf) {
                 pdf.getPage(1).then(function getPageHelloWorld(page) {
@@ -220,12 +235,19 @@
             });
             
         },
+        /*
+            Check whether the user has uploaded a resume 
+        */
         setIsUploadedResume: function () {
             this.resume.isUploadedResume = false;
             if(!this.resume || this.resume.id > 0){
                 this.resume.isUploadedResume = true;
             }
         },
+        /*
+            when the val is 'undefined' the JSON.encode remove the property from the object.
+            Therefore, we need to put NULL instead of undefined.
+        */
         setVal: function (val) {
             return val ? val : null;
         }

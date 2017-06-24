@@ -1,5 +1,7 @@
 ﻿define(['angular'], function (angular) {
-
+    /*
+       Home page component components
+   */
     function HomePageCtrl($rootScope, homePageService) {
         this.homePageService = homePageService;
         this.$rootScope = $rootScope;
