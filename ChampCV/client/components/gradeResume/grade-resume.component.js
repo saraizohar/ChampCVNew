@@ -33,6 +33,9 @@
                 });
             }.bind(this));
         },
+        /*
+            User clicked "Report" button
+        */
         report: function () {
             // notify report was clicked
             this.gradeResumeService.report(this.user.cid, this.resume.id).then(function (result) {
@@ -52,9 +55,16 @@
                 }.bind(this));
             }.bind(this));
         },
+        /*
+            User clicked "Skip" Button
+        */
         skip: function () {
             this.moveToNextResume();
         },
+        /*
+            User clicked a star of one of the questions. 
+            Need to update relevant question's grade
+        */
         starClicked: function ($event, star) {
             var starID = $event.currentTarget.attributes.id.nodeValue;
 
@@ -62,6 +72,20 @@
             star.$parent.question.grade = parseInt(starID);
             star.$parent.question.isNotRelevant = false;
         },
+        /*
+            User clicked "Not Relevant" button of one of the questions. 
+            Need to update relevant question's grade
+        */
+        notRelevantClicked: function (id) {
+            // When not elevant was clicked - the grade is 0
+            var question = this.closeQuestions[id - 1];
+            if (question.isNotRelevant) {
+                question.grade = 0;
+            }
+        },
+        /*
+            User clicked "Submit" button
+        */
         submit: function () {
             var answers = {},
                 points,
@@ -117,6 +141,9 @@
             }
 
         },
+        /*
+            Validate user's answers
+        */
         _validate: function () {
             var isAllAnswered = true;
             this.isError = false;
@@ -135,6 +162,9 @@
 
             return true;
         },
+        /*
+            Clean grade resume form before moving to next question
+        */
         clean: function () {
             this.initQuestions();
             this.startDate = null;
@@ -144,13 +174,9 @@
             this.isBuy = false;
             this.isShowModal = false;
         },
-        notRelevantClicked: function (id) {
-            // When not elevant was clicked - the grade is 0
-            var question = this.closeQuestions[id-1];
-            if (question.isNotRelevant) {
-                question.grade = 0;
-            }
-        },
+        /*
+            init array of fields which the resume contains 
+        */
         initFieldsList: function () {
             // Check which fields are in the users resume
             var fieldMetadata;
@@ -162,6 +188,9 @@
                 }
             }.bind(this));
         },
+        /*
+            init array of questions 
+        */
         initQuestions: function () {
             this.closeQuestions = this.closeQuestionsService.getQuestionsList();
             this.closeQuestions.forEach(function (question) {
@@ -169,6 +198,9 @@
                 question.isNotRelevant = false;
             });
         },
+        /*
+            functions to measure rankings duration
+        */
         startMeasureTime: function () {
             this.startDate = new Date();
         },
@@ -180,6 +212,9 @@
                 return (this.endDate - this.startDate)/1000;
             }
         },
+        /*
+            handles switching to the next CV
+        */
         moveToNextResume: function () {
             var errorMsg;
 
@@ -195,9 +230,11 @@
                 this.$rootScope.$emit('movePage:homePage');
             }.bind(this));
         },
+        /*
+            when the val is 'undefined' the JSON.encode remove the property from the object.
+            Therefore, we need to put NULL instead of undefined.
+        */
         setVal: function (val) {
-            // when the val is 'undefined' the JSON.encode remove the property from the object.
-            // Therefore, we need to put NULL instead of undefined.
             return val ? val : null;
         }
     }

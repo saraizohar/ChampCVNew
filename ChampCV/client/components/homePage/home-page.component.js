@@ -9,9 +9,9 @@
     }
 
     HomePageCtrl.prototype = {
-        getTasksList: function () {
-            return this.homePageService.getTasksList(this.user.cid);
-        },
+        /*
+         Called when all bindings are ready
+        */
         $onInit: function () {
             // Get resumes list to grade
             this.getTasksList().then(function (response) {
@@ -23,8 +23,18 @@
             }.bind(this)).finally(function () {
                 this.isLoading = false;
             }.bind(this));
-            
+
         },
+        /*
+            get resumes to grade list
+        */
+        getTasksList: function () {
+            return this.homePageService.getTasksList(this.user.cid);
+        },
+        /*
+            upload resumes
+            convert the first page to picutes in order to show them in cards
+        */
         readTasks: function () {
             var task;
             if (this.tasksList) {
@@ -64,6 +74,9 @@
                 }
             }
         },
+        /*
+            user clicked "Grade Me" button. Need to move to Grade resume page
+        */
         gradeCV: function (index) {
             var data = {
                 list: this.tasksList,
