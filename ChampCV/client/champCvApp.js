@@ -1,6 +1,4 @@
 ﻿define(['angular',
-    'googleCharts',
-    'angular-route',
     './controllers/champCvCtrl',
     './components/login/login.component',
     './components/registration/registration.component',
@@ -19,9 +17,8 @@
     './services/fields.service',
     './services/settings.service',
     './services/personal-zone.service',
-    './services/charts.service',
     './services/close-questions.service', ],
-    function (angular, googleCharts, angularRoute, champCvCtrl,
+    function (angular, champCvCtrl,
             loginCmp,
             registrationCmp,
             homePageCmp,
@@ -39,9 +36,8 @@
             fieldsService,
             settingsService,
             personalZoneService,
-            chartsService,
             closeQuestionsService) {
-        var app = angular.module('champCvApp', ['ngRoute']);
+        var app = angular.module('champCvApp', []);
 
     app.init = function () {
         angular.bootstrap(document, ['champCvApp']);
@@ -56,7 +52,6 @@
     app.factory('fieldsService', [fieldsService]);
     app.factory('settingsService', ['$http', '$q', settingsService]);
     app.factory('personalZoneService', ['$http', '$q', personalZoneService]);
-    app.factory('chartsService', ['$q', chartsService]);
     app.factory('closeQuestionsService', [closeQuestionsService]);
 
     app.controller('champCvCtrl', ['$rootScope', 'gradeResumeService', champCvCtrl]);
@@ -80,14 +75,6 @@
             }
         };
     });
-   
-    /*app.config(['$routeProvider', function ($routeProvider) {
-        debugger;
-        $routeProvider.when('/sarai', {
-            template: '<login></login>'
-        });
-    }]);*/
-    //app.controller('feelingLuckyCtrl', ['tweetyFactory', 'chartsFactory', 'langFactory', '$rootScope', feelingLuckyCtrl]);
 
     return app;
     });
