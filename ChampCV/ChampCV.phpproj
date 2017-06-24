@@ -232,7 +232,6 @@
     <Content Include="client\main.js" />
     <Content Include="client\main.js" />
     <Content Include="client\champCvApp.js" />
-    <Content Include="client\services\charts.service.js" />
     <Content Include="client\services\close-questions.service.js" />
     <Content Include="client\services\file-upload.service.js" />
     <Content Include="client\services\grade-resume.service.js" />
