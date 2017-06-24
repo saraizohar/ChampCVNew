@@ -221,7 +221,6 @@
     <Content Include="client\img\no-speak-monkey.png" />
     <Content Include="client\img\quotes_left.png" />
     <Content Include="client\img\quotes_right.png" />
-    <Content Include="client\js\init.js" />
     <Content Include="client\js\materialize.js" />
     <Content Include="client\js\materialize.min.js" />
     <Content Include="client\libs\angular-route.js" />

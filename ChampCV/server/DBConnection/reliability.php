@@ -81,7 +81,7 @@ class Reliability
 
     }
 
-    public static function question_mean_ranks_penalty($user_id, $cv_id, $answer_question_i)
+    public static function question_mean_ranks_penalty($user_id, $cv_id, $answer_question_i)//penalty foe specific question if the user answer is too different from the crowd average
     {
         global $db;
         $query_text1 =  "
@@ -241,7 +241,7 @@ class Reliability
             return $user_time;
         }
         //<ToDo> liran addition:
-        if ($user_answer >0 and $ranks_num > 8){
+        if ($user_answer >0 and $ranks_num > 8){ //we give penalty only if there is enough ranks (more then 8)
             if (abs($user_answer - $avg) > $std * 2){
                 return 1;
             } elseif (abs($user_answer - $avg) > $std * 1.5){
@@ -255,7 +255,7 @@ class Reliability
         }
     }
 
-    public static function mean_ranks_penalty($user_id, $cv_id)
+    public static function mean_ranks_penalty($user_id, $cv_id)// penalty for set all the rank, sum of the mean penalty of each question
     {
         $panelty_sum = 0;
         for ($i = 1; $i <= 8; $i++) {
@@ -283,7 +283,7 @@ class Reliability
     }
 
     //ToDo Validate[]
-    public static function update_all_rank_reliability($user_id)
+    public static function update_all_rank_reliability($user_id)//for given user updates the reliabilities of all his historical ranks
     {
         global $db;
         $query_text = "
@@ -306,14 +306,14 @@ class Reliability
             return $time_stat;
         }
         $max = sizeof($q01);
-        for ($i = 0; $i < $max; $i++) {
+        for ($i = 0; $i < $max; $i++) { // runs over all the user's ranks
             $rank_reliability = Reliability::calculate_rank_reliability($user_id, $q01[$i]['cv_id']);
             Reliability::update_rank_reliability($user_id, $q01[$i]['cv_id'], $rank_reliability);
         }
         return 1;
     }
 
-    public static function cal_user_reliability($user_id)
+    public static function cal_user_reliability($user_id) // calculating the user reliability
     {
         global $db;
         $spu = Reliability::spam_user_ranks_penalty($user_id);
@@ -341,13 +341,13 @@ class Reliability
             $time_stat = array('error_message' => $error_message);
             return $time_stat;
         }
-        If (max($spu, $spcv, $sprp) == 1 ) {
+        If (max($spu, $spcv, $sprp) == 1 ) { // if at least one of the report penalties is equal to 1 the user penalty will be 1 (highest)
             return 0;
         }
-        else if($avg <= 0.2 and $rank_num>3) {
+        else if($avg <= 0.2 and $rank_num>3) {// if the user did at least 4 ranks with low reliability <0.2 the user penalty will be 1 (highest)
             return 0;
         }
-        else {
+        else {  // else we give an equal weight for each of the 4 measures/penalties- 3 report penalties and the average reliability of all the historical ranks the user did
             try{
                 $user_reliability = ((float)$avg + (1 - (float)$spu) + (1 - (float)$spcv) + (1 - (float)$sprp)) / 4;
             }
@@ -453,7 +453,7 @@ class Reliability
         }
 
     }
-    public static function spam_user_ranks_penalty($input_user_id)
+    public static function spam_user_ranks_penalty($input_user_id)// calculates the penalty of spam ranks- meaning if the the user got reported for his answers (open question and comments)
     {
         global $db;
         $query_text = "SELECT count(*) AS reported_num_user FROM reports, users WHERE reports.report_cv=0 AND
@@ -496,7 +496,7 @@ class Reliability
             $reported_num_recruiter = array('error_message' => $error_message);
             return $reported_num_recruiter;
         }
-        $totalNum = $r_user_num + $r_rec_num;
+        $totalNum = $r_user_num + $r_rec_num; // total number of reports by regular users and recruiters
         if ($totalNum > 1) {
             return 1;
         } elseif ($totalNum == 1) {
@@ -507,7 +507,7 @@ class Reliability
     }
 
     //ToDo Validate[]
-    public static function spam_cv_ranks_penalty($user_id)
+    public static function spam_cv_ranks_penalty($user_id)// calculates the penalty of spam cvs- meaning if the user got reported for uploading spam cv
     {
         global $db;
         $query_text = "
@@ -604,10 +604,10 @@ class Reliability
         }
         $report_num = $reported_num_recruiter + $reported_num_user;
 
-        If ($report_num == 0) {
+        If ($report_num == 0) { // we check the number of reliable reports on the user's cv and the number of reliable ranks
             return 0;
         } else if ($report_num < 3) {
-            If ($rank_num > 7) {
+            If ($rank_num > 7) { // there is more then 7 reliable ranks- we assume that spam cv not sposed to be ranked
                 return 0;
             } else if ($rank_num < 2) {
                 if ($report_num == 1) {
@@ -624,13 +624,13 @@ class Reliability
                     return 0.75;
                 }
             }
-        } else {
+        } else { // if there is more then 2 reports on the user's cv it's probably true- his cv is spam
             Return 1;
         }
     }
 
 
-    public static function spam_wrong_reports_penalty($user_id)
+    public static function spam_wrong_reports_penalty($user_id)// if the user give fake reports on other users (maybe he is threatened by them)
     {
         global $db;
         $query_text = "
@@ -654,7 +654,7 @@ class Reliability
         $num_wrong_report = 0;
         $num_single_reported_answers=0;
         $max = sizeof($q01);
-        for ($i = 0; $i < $max; $i++) {
+        for ($i = 0; $i < $max; $i++) { // we iterate over all the user's reports- for each report we check if the user was right to report them and calculate the total fake reports
             $report_cv = $q01[$i]['report_cv'];
             $reported_id = $q01[$i]['reported_id'];
             $query_text1 = "
@@ -700,11 +700,11 @@ class Reliability
                 $reported_num_user = array('error_message' => $error_message);
                 return $reported_num_user;
             }
-            if ($report_num == 1) {
-                if ($rank_num == 3 or $rank_num == 4) {
+            if ($report_num == 1) { // if the user is the only user that gave report-
+                if ($rank_num == 3 or $rank_num == 4) { // the number of reliable reports
                     $num_wrong_report += 0.5;
                 } else if ($rank_num > 4) {
-                    $num_wrong_report += 1;
+                    $num_wrong_report += 1;// if the number of reliable reports is more then 4 and he was the only reporter we assume he gave fake report
                 }
             }
             else if (($report_num = 2) and ($rank_num > 10)) {
@@ -714,7 +714,7 @@ class Reliability
                 $num_single_reported_answers+=1;
             }
         }//end of for loop
-        if ($num_wrong_report>2){
+        if ($num_wrong_report>2){ // if he gave at least 3 fake reports the penalty will be 1
             return 1;
         }
         else if ($num_single_reported_answers>3){
@@ -726,7 +726,7 @@ class Reliability
     }
 
     //ToDo Validate[]
-    public static function get_ranks_results_array($cv_id)
+    public static function get_ranks_results_array($cv_id)// results array- contains average result for each question and the average result other cvs got to compare, also contains the number of ranks and if it is enough to display
     {
         $ret;
         $questions_res_arr=[];
@@ -744,7 +744,7 @@ class Reliability
         }
         return $ret;
     }
-    public static function get_users_ranks_num($cv_id)
+    public static function get_users_ranks_num($cv_id)// number of reliable regular users ranked this cv
     {
         global $db;
         $query_text = "
@@ -775,7 +775,7 @@ class Reliability
             return $err;
         }
     }
-    public static function get_recruiters_ranks_num($cv_id)
+    public static function get_recruiters_ranks_num($cv_id)// number of reliable recruiters ranked this cv
     {
         global $db;
         $query_text = "
@@ -807,7 +807,7 @@ class Reliability
         }
     }
     //ToDo Validate[]
-    public static function get_rank_results_question($cv_id, $answer_question_i)
+    public static function get_rank_results_question($cv_id, $answer_question_i)// calculate the result for specific question- results for this particular cv and the other users cvs for comparing
     {
         global $db;
         switch ($answer_question_i) {
@@ -1030,16 +1030,16 @@ class Reliability
         if ($total_rank_num==0){
             $total_avg_res=0;
         }
-        else {
+        else {// calculate the result for all other cvs in the db
             try {
                 if ($u_ranks_num>0 and $r_ranks_num>0) {
-                    $f_r=$r_sum/$total_rank_num;
-                    $f_u=$u_sum/$total_rank_num;
-                    $w_r=2/3;
-                    $w_u=1/3;
-                    $avg_r=$r_sum/$r_ranks_num;
-                    $avg_u=$u_sum/$u_ranks_num;
-                    $total_avg_res = (($f_u*$w_u*$avg_u) + ($f_r*$w_r*$avg_r)) / ($f_u*$w_u+$f_r*$w_r);
+                    $f_r=$r_sum/$total_rank_num;//frequency of recruiter ranks number as a weight
+                    $f_u=$u_sum/$total_rank_num;//frequency of regular users ranks number as a weight
+                    $w_r=2/3; // weight of recruiter average
+                    $w_u=1/3; // weight of regular average
+                    $avg_r=$r_sum/$r_ranks_num;//average of recruiter ranks result
+                    $avg_u=$u_sum/$u_ranks_num;//average of regular ranks result
+                    $total_avg_res = (($f_u*$w_u*$avg_u) + ($f_r*$w_r*$avg_r)) / ($f_u*$w_u+$f_r*$w_r);//weighted average
                 }
                 else if($u_ranks_num>0){
                     $total_avg_res=$u_sum/ $u_ranks_num;
@@ -1057,16 +1057,16 @@ class Reliability
         if ($total_cv_rank_num==0){
             $total_cv_avg_res=0;
         }
-        else {
+        else {// calculate the result for this cv
             try {
                 if ($cv_u_ranks_num>0 and $cv_r_ranks_num>0) {
-                    $f_r=$cv_r_sum/$total_cv_rank_num;
-                    $f_u=$cv_u_sum/$total_cv_rank_num;
-                    $w_r=2/3;
-                    $w_u=1/3;
-                    $avg_r=$cv_r_sum/$cv_r_ranks_num;
-                    $avg_u=$cv_u_sum/$cv_u_ranks_num;
-                    $total_cv_avg_res = (($f_u*$w_u*$avg_u) + ($f_r*$w_r*$avg_r)) / ($f_u*$w_u+$f_r*$w_r);
+                    $f_r=$cv_r_sum/$total_cv_rank_num; //frequency of recruiter ranks number as a weight
+                    $f_u=$cv_u_sum/$total_cv_rank_num; //frequency of regular users ranks number as a weight
+                    $w_r=2/3;// weight of recruiter average
+                    $w_u=1/3;// weight of regular average
+                    $avg_r=$cv_r_sum/$cv_r_ranks_num; //average of recruiter ranks result
+                    $avg_u=$cv_u_sum/$cv_u_ranks_num;//average of regular ranks result
+                    $total_cv_avg_res = (($f_u*$w_u*$avg_u) + ($f_r*$w_r*$avg_r)) / ($f_u*$w_u+$f_r*$w_r);//weighted average
                 }
                 else if($cv_u_ranks_num>0){
                     $total_cv_avg_res=$cv_u_sum/ $total_cv_rank_num;
