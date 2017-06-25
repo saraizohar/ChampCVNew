@@ -46,8 +46,15 @@
                         this.moveToNextResume();
                     }.bind(this));
                 }.bind(this));
-            }.bind(this)).catch(function () {
-                Materialize.toast("An error occured. Let's move to the next CV.", 2000, '', function () {
+            }.bind(this)).catch(function (result) {
+                var errorMsg = result.data.error_message, toast;
+                if (this._isAlreadyReported(errorMsg)) {
+                    toast = 'You already reported this resume. We are checking this issue.';
+                } else {
+                    toast = "An error occured. Let's move to the next CV.";
+                }
+
+                Materialize.toast(toast, 2000, '', function () {
                     this.$rootScope.$evalAsync(function () {
                         // After the toast notification was dismissed, move to next question
                         this.moveToNextResume();
@@ -236,6 +243,12 @@
         */
         setVal: function (val) {
             return val ? val : null;
+        },
+        /*
+            If there were an integrity error, it means that the user has already reported this resume
+        */
+        _isAlreadyReported: function (errorMsg) {
+            return errorMsg.indexOf('Integrity constraint violation') != -1
         }
     }
 
