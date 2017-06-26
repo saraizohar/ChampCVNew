@@ -4,6 +4,8 @@ require_once('DBConnection.php');
 
 class getDataFromDB{
 	
+	const reliabilityLimit = 0.5; 
+	
 	/*Parameters: $member_name.
 	  Description: function finds the member's id by the member_name.  
 	  Return: an array containing member_id. In case of an error,
@@ -648,9 +650,17 @@ class getDataFromDB{
 				'list' => array());
 			}
 			else{
-				return array('isHaveQuestion' => true, 'question' => $open_question,
-				'list' => $temp);
+				$final = getDataFromDB::processList($temp);
+				//check for errors
+				if (key($final) == 'error_message'){
+					return $final; 
+				}
+				else {
+					return array('isHaveQuestion' => true, 'question' => $open_question,
+					'list' => $final['list']);
+				}
 			}
+			
 		}
 		
 		catch (PDOException $ex) {
@@ -658,6 +668,73 @@ class getDataFromDB{
 			$result = array('error_message' => $error_message);
 			return $result;
 		}
+	}
+	
+	/*Parameters: $list. 
+	  Description: function removes unreliable comments/answers from $list.
+	  Return: an array containing all the reliable comments/answers.
+	  In case of an error, an array containing a description of the error*/
+	public static function processList($list){
+		
+		global $db; 
+				
+		for ($i=0; $i<count($list); $i++){
+			//check if ranking person is a recruiter
+			$member_id = $list[$i]['id'];
+			$isRecruiter = getDataFromDB::isRecruiter($member_id);
+			//check for errors
+			if ($isRecruiter != 0 and $isRecruiter != 1){
+				return $isRecruiter;
+			}
+			//recruiter
+			else if ($isRecruiter == 1){
+				//set query
+				$query_text = "SELECT recruiter_reliability FROM recruiters WHERE 
+				recruiter_id = :member_id"; 
+			}
+			//regular user
+			else{
+				$query_text = "SELECT user_reliability FROM users WHERE user_id = :member_id"; 
+			}
+			try {
+				//prepare query		
+				$query_statement = $db->prepare($query_text);
+				//bind
+				$query_statement->bindValue(':member_id', $member_id); 
+				//execute query
+				$query_statement->execute();
+				//fetch results
+				$result = $query_statement->fetch(PDO::FETCH_ASSOC);
+				//check reliability 
+				if ($isRecruiter == 1){
+					$reliability = $result['recruiter_reliability'];
+				}
+				else if ($isRecruiter == 0){
+					$reliability = $result['user_reliability'];
+				}
+				//remove unreliable users
+				if ($reliability <= getDataFromDB::reliabilityLimit){
+					unset($list[$i]);
+				}
+				
+			}
+			catch (PDOException $ex) {
+			$error_message = $ex->getMessage();
+			$result = array('error_message' => $error_message);
+			return $result;
+			}
+		}
+		
+		$index = 0; 
+		foreach ($list as $k => $v){
+			if ($index != $k){
+				$list[$index] = $list[$k];
+				unset($list[$k]);
+			}
+			$index++;
+		}
+		
+		return array('list' => $list); 
 	}
 	
 	/*Parameters: $user_id. 
@@ -731,8 +808,16 @@ class getDataFromDB{
 				return $toReturn; 
 			}
 			
-			$toReturnFinal = array('comments' => $toReturn); 
-			return $toReturnFinal; 
+			$final = getDataFromDB::processList($toReturn);
+			//check for errors
+			if (key($final) == 'error_message'){
+				return $final; 
+			}
+			else {
+				$toReturnFinal = array('comments' => $final['list']); 
+				return $toReturnFinal; 
+			}
+			
 		}
 		
 		catch (PDOException $ex) {
